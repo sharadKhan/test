@@ -1,0 +1,42 @@
+---
+name: Build and Deploy MSI
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup Choco package
+        run: >
+          Set-ExecutionPolicy Bypass -Scope Process
+
+          Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@vo
+        with:
+          version: 'latest'
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+      - name: Authenticate to Artifact Registry
+        run: gcloud auth activate-service-account --key-file=$gcpKeyFile
+      - name: Build and push artifact
+        run: |
+          # Example of uploading a file to the Google Artifact Registry
+          # Replace with your specific artifact commands
+          packagePath="MSIDemo.22.0.0.43559.nupkg"
+          gcpRepository="chocopackages"
+          packageName="MSIDemo"
+          packageVersion="v1.0.0"
+          
+          gcloud artifacts repositories create $gcpRepository --repository-format=generic --location=$gcpRegion
+  
+          ggcloud artifacts generic upload --source=$packagePath --project=$gcpProject --location=$gcpRegion --repository=$gcpRepository --package=$packageName --version=$packageVersion
+  
+ 
+      - name: Verify artifact upload
+        run: |
+          gcloud artifacts repositories list --location=$gcpRegion --filter="name~$gcpRepository" --format="value(name)"
