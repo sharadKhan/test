@@ -8,12 +8,10 @@ jobs:
   build:
     runs-on: windows-latest
     env:
-      projectPath: "MSIDemo.22.0.0.43559.nupkg"
+      artifactPath: "MSIDemo.22.0.0.43559.nupkg"
       gcpRepository: "chocopackages"
       packageName: "MSIDemo"
       packageVersion: "v1.0.0"
-      region: "asia-south1"
-      project: "glass-watch-430704-t2"
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -33,11 +31,18 @@ jobs:
         uses: 'google-github-actions/auth@v2'
         with:
           credentials_json: '${{ secrets.GCPKEY }}'
-      - name: Build and push artifact
+      - name: Create Repository
         run: |
-          # Example of uploading a file to the Google Artifact Registry
-          # Replace with your specific artifact commands
-          # gcloud artifacts repositories create "chocopackages" --repository-format=generic --location="asia-south1"  --project="glass-watch-430704-t2"
-          gcloud artifacts generic upload --source=${{env.projectPath}} --project=${{ secrets.GCPPROJECT }} --location=${{ secrets.GCPREGION }} --repository=${{env.gcpRepository}} --package=${{env.packageName}} --version=${{env.packageVersion}}
+          Write-Output "Creating Artifact Registry repository if it does not exist..."
+          $repoExists = & gcloud artifacts repositories list --location=${{ secrets.GCPREGION }} --filter="name~${{env.gcpRepository}}" --format="value(name)"
+          if (-not $repoExists) {
+              &   gcloud artifacts repositories create ${{env.gcpRepository}} --repository-format=generic --location=${{ secrets.GCPREGION }}  --project=${{ secrets.GCPPROJECT }}
+          } else {
+              Write-Output "Repository $gcpRepository already exists."
+          }
+      - name: Push artifact
+        run: |
+          gcloud artifacts repositories create "chocopackages" --repository-format=generic --location="asia-south1"  --project="glass-watch-430704-t2"
+          gcloud artifacts generic upload --source=${{env.artifactPath}} --project=${{ secrets.GCPPROJECT }} --location=${{ secrets.GCPREGION }} --repository=${{env.gcpRepository}} --package=${{env.packageName}} --version=${{env.packageVersion}}
   
  
