@@ -32,7 +32,7 @@ jobs:
         run: |
           # Example of uploading a file to the Google Artifact Registry
           # Replace with your specific artifact commands
-          gcloud artifacts repositories create '${{env.gcpRepository}}' --repository-format=generic --location='${{env.region}}'
+          gcloud artifacts repositories create "chocopackages" --repository-format=generic --location="asia-south1"
           # gcloud artifacts generic upload --source=$artifactPath --project=${{ secrets.GCPPROJECT }} --location=${{ secrets.GCPREGION }} --repository=${{env.gcpRepository}} --package=${{env.packageName}} --version=${{env.packageVersion}}
   
  
