@@ -7,6 +7,11 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+    env:
+      projectPath: "MSIDemo.22.0.0.43559.nupkg"
+      gcpRepository: "chocopackages"
+      packageName: "MSIDemo"
+      packageVersion: "v1.0.0"
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -25,13 +30,8 @@ jobs:
         run: |
           # Example of uploading a file to the Google Artifact Registry
           # Replace with your specific artifact commands
-          artifactPath="MSIDemo.22.0.0.43559.nupkg"
-          gcpRepository="chocopackages"
-          packageName="MSIDemo"
-          packageVersion="v1.0.0"
-          gcpProject = ${{secrets.GCPPROJECT}}
-          gcpRegion = ${{secrets.GCPREGION}}
-          gcloud artifacts repositories create $gcpRepository --repository-format=generic --location=$gcpRegion
-          ggcloud artifacts generic upload --source=$artifactPath --project=$gcpProject --location=$gcpRegion --repository=$gcpRepository --package=$packageName --version=$packageVersion
+          g
+          gcloud artifacts repositories create ${{env.gcpRepository}} --repository-format=generic --location= ${{secrets.GCPREGION}}
+          ggcloud artifacts generic upload --source=$artifactPath --project= ${{secrets.GCPPROJECT}} --location= ${{secrets.GCPREGION}} --repository=${{env.gcpRepository}} --package=${{env.packageName}} --version=${{env.packageVersion}}
   
  
