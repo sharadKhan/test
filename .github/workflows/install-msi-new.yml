@@ -1,0 +1,30 @@
+name: Install MSI on Customer VM
+
+on:
+  workflow_dispatch:
+    inputs:
+      customer_name:
+        description: 'Customer name'
+        required: true
+
+jobs:
+  install-msi:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up environment variables
+        run: |
+          echo "CUSTOMER_NAME=${{ github.event.inputs.customer_name }}" >> $GITHUB_ENV
+
+      - name: Install Chocolatey
+        run: |
+          Set-ExecutionPolicy Bypass -Scope Process -Force; \
+          [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; \
+          iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+      - name: Run PowerShell script to install MSI
+        run: pwsh ./install-msi.ps1 -customer_name $env:CUSTOMER_NAME
+        shell: pwsh
