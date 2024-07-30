@@ -1,0 +1,44 @@
+name: Publish Chocolatey Package to JFrog
+
+on:
+  push:
+    branches:
+      - feature
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up .NET Core
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: '3.1.x'
+
+    - name: Install Chocolatey
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y mono-devel
+        sudo apt-get install -y gnupg
+        curl -o- https://chocolatey.org/install.sh | bash
+
+    - name: Pack Chocolatey Package
+      run: |
+        choco pack ./path/to/your/nuspecfile.nuspec
+
+    - name: Configure JFrog CLI
+      uses: jfrog/setup-jfrog-cli@v1
+      with:
+        version: 'latest'
+
+    - name: Upload Package to JFrog
+      run: |
+        jfrog rt config --url ${{ secrets.JFROG_URL }} --user ${{ secrets.JFROG_USER }} --password ${{ secrets.JFROG_PASSWORD }}
+        jfrog rt upload --flat=false "path/to/your/*.nupkg" "your-repo-name/path/in/repo/"
+
+    - name: Publish Chocolatey Package
+      run: |
+        choco push -s ${{ secrets.JFROG_URL }}/your-repo-name --api-key ${{ secrets.JFROG_API_KEY }} "path/to/your/*.nupkg"

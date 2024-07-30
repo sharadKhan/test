@@ -1,0 +1,28 @@
+---
+name: Build and Deploy MSI
+on:
+  push:
+    branches:
+      - feature
+jobs:
+  build:
+    runs-on: windows-latest
+    env:
+      artifactPath: "MSIDemo.22.0.0.43559.nupkg"
+      gcpRepository: "chocopackages"
+      MSI_NAME: "MSIDemo"
+      packageVersion: "v1.0.2"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Setup Choco package
+        run:  Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iwr https://community.chocolatey.org/install.ps1 -UseBasicParsing | iex
+      - name: Create packages
+        run: ./scripts/script.ps1 --msiname "=${{ env.MSI_NAME }}"
+        shell: pwsh
+      - name: Upload package
+        run: ./scripts/script.ps1 
+
+
+  
+ 
