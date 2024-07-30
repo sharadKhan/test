@@ -6,8 +6,8 @@ param (
 )
 
 # Create a credential object
-#$securePassword = ConvertTo-SecureString $remote_password -AsPlainText -Force
-$credential = New-Object System.Management.Automation.PSCredential ($remote_user, $remote_password)
+$securePassword = ConvertTo-SecureString $remote_password -AsPlainText -Force
+$credential = New-Object System.Management.Automation.PSCredential ($remote_user, $securePassword)
 
 # Define the script block to run on the remote machine
 $scriptBlock = {
