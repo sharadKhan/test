@@ -19,7 +19,7 @@ jobs:
         run: |
           echo "CUSTOMER_NAME=${{ github.event.inputs.customer_name }}" >> $GITHUB_ENV
           echo "REMOTE_HOST='172.29.74.154' " 
-          echo "REMOTE_USER='Sonata\m.abhisehek' "
+          echo "REMOTE_USER='SONATA\m.abhishek' "
           echo "REMOTE_PASSWORD='Gv@123456' " 
 
       - name: Install Chocolatey
