@@ -18,14 +18,14 @@ jobs:
       - name: Set up environment variables
         run: |
           echo "CUSTOMER_NAME=${{ github.event.inputs.customer_name }}" >> $GITHUB_ENV
-          echo "REMOTE_HOST=${{ github.event.inputs.remote_host }}" >> $GITHUB_ENV
-          echo "REMOTE_USER=${{ github.event.inputs.remote_user }}" >> $GITHUB_ENV
-          echo "REMOTE_PASSWORD=${{ github.event.inputs.remote_password }}" >> $GITHUB_ENV
+          echo "REMOTE_HOST='172.29.74.154' " 
+          echo "REMOTE_USER='Sonata\m.abhisehek' "
+          echo "REMOTE_PASSWORD='Gv@123456' " 
 
       - name: Install Chocolatey
         run: |
           Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 
       - name: Run PowerShell script to install MSI
-        run: pwsh ./remote-install.ps1 -customer_name $env:CUSTOMER_NAME -remote_host $env:REMOTE_HOST -remote_user $env:REMOTE_USER -remote_password $env:REMOTE_PASSWORD
+        run: pwsh ./install-msi.ps1 -customer_name $env:CUSTOMER_NAME -remote_host $env:REMOTE_HOST -remote_user $env:REMOTE_USER -remote_password $env:REMOTE_PASSWORD
         shell: pwsh
