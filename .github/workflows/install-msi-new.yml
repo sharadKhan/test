@@ -24,5 +24,5 @@ jobs:
           Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 
       - name: Run PowerShell script to install MSI
-        run: pwsh ./install-msi.ps1 -customer_name "test-customer"
+        run: pwsh ./install-msi.ps1 -customer_name $CUSTOMER_NAME
         shell: pwsh
