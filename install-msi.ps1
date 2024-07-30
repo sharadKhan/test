@@ -1,24 +1,44 @@
 param (
-    [string]$customer_name
+    [string]$customer_name,
+    [string]$remote_host,
+    [string]$remote_user,
+    [string]$remote_password
 )
 
-# Read the configuration file
-$config = Get-Content -Raw -Path "./test.json" | ConvertFrom-Json
+# Create a credential object
+$securePassword = ConvertTo-SecureString $remote_password -AsPlainText -Force
+$credential = New-Object System.Management.Automation.PSCredential ($remote_user, $securePassword)
 
-# Get the MSI details for the specified customer
-$msiDetails = $config.$customer_name.msifile1[0]
+# Define the script block to run on the remote machine
+$scriptBlock = {
+    param (
+        [string]$customer_name
+    )
 
-$name = $msiDetails.name
-$version = $msiDetails.version
-$msipath = $msiDetails.msipath
-$msiargs = $msiDetails.msiargs
-$nupkgpath = $msiDetails.nupkgpath
-$upgrade = $msiDetails.upgrade
+    # Define the path to the configuration file and workspace
+    $configFile = "C:\Temp\Repo\test.json"
+    $workspacePath = "C:\Temp\Repo"
 
-$workspacePath = $env:GITHUB_WORKSPACE
+    # Read the configuration file
+    $config = Get-Content -Raw -Path $configFile | ConvertFrom-Json
 
-# Ensure the path to the nupkg file is correct
-$nupkgFullPath = Join-Path -Path $workspacePath -ChildPath $nuppkgpath
+    # Get the MSI details for the specified customer
+    $msiDetails = $config.$customer_name.msifile1[0]
 
-# Install the nupkg file using Chocolatey
-choco install $name  --source=$nupkgFullPath -y
+    $name = $msiDetails.name
+    $version = $msiDetails.version
+    $msipath = Join-Path -Path $workspacePath -ChildPath $msiDetails.msipath
+    $msiargs = $msiDetails.msiargs
+    $nupkgpath = Join-Path -Path $workspacePath -ChildPath $msiDetails.nupkgpath
+    $upgrade = $msiDetails.upgrade
+
+    # Install the nupkg file using Chocolatey
+    choco install $name --version=$version --source=$nupkgpath -y
+}
+
+# Copy the repository to the remote host
+Copy-Item -Path $PSScriptRoot\* -Destination \\$remote_host\c$\Temp\Repo -Recurse -Force
+
+# Execute the script block on the remote machine
+Invoke-Command -ComputerName $remote_host -Credential $credential -ScriptBlock $scriptBlock -ArgumentList $customer_name
+
