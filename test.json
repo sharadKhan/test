@@ -1,0 +1,14 @@
+{
+    "customer1": {
+      "msifile1": [
+        {
+          "name": "MSIDemo",
+          "version": "1.0.0",
+          "msipath": "builds\\MSIDemo.msi",
+          "msiargs": "/quiet /norestart",
+          "nuspecpath": "./MSIDemo.22.0.0.50000.nupkg",
+          "upgrade": "$false"
+        }
+      ]
+    }
+}

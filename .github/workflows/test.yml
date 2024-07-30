@@ -1,0 +1,76 @@
+name: Install MSIs for Customer
+
+on:
+  workflow_dispatch:
+    inputs:
+      customer_name:
+        description: 'Name of the customer'
+        required: true
+        default: 'default-customer'
+
+jobs:
+  install-msis:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install jq
+      run: sudo apt-get install jq -y
+
+    - name: Fetch MSI details
+      id: fetch-msi
+      run: |
+        customer_name=${{ github.event.inputs.customer_name }}
+        # Fetch the MSI details from a configuration file or a database
+        # For demonstration, assuming a JSON file with customer details
+        msi_details=$(cat customers.json | jq -r --arg customer "$customer_name" '.customers[$customer]')
+        echo "::set-output name=msi_details::$msi_details"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Configure JFrog CLI
+      run: |
+        curl -fL https://getcli.jfrog.io | sh
+        ./jfrog config add my-jfrog --url=$JFROG_URL --user=$JFROG_USER --password=$JFROG_PASSWORD --interactive=false
+      env:
+        JFROG_URL: ${{ secrets.JFROG_URL }}
+        JFROG_USER: ${{ secrets.JFROG_USER }}
+        JFROG_PASSWORD: ${{ secrets.JFROG_PASSWORD }}
+
+    - name: Download Chocolatey package
+      run: |
+        msi_details=${{ steps.fetch-msi.outputs.msi_details }}
+        package_name=$(echo $msi_details | jq -r '.package_name')
+        ./jfrog rt download --spec=$package_name
+      env:
+        JFROG_URL: ${{ secrets.JFROG_URL }}
+        JFROG_USER: ${{ secrets.JFROG_USER }}
+        JFROG_PASSWORD: ${{ secrets.JFROG_PASSWORD }}
+
+    - name: Install SSH client
+      run: sudo apt-get install openssh-client -y
+
+    - name: Install MSIs on customer machine
+      run: |
+        msi_details=${{ steps.fetch-msi.outputs.msi_details }}
+        msis=$(echo $msi_details | jq -r '.msis[]')
+        for msi in $msis; do
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.CUSTOMER_VM_IP }} "choco install $msi -y --source jfrog"
+        done
+      env:
+        SSH_USER: ${{ secrets.SSH_USER }}
+        CUSTOMER_VM_IP: ${{ secrets.CUSTOMER_VM_IP }}
+        CHOCO_SOURCE: ${{ secrets.CHOCO_SOURCE }}
+        JFROG_URL: ${{ secrets.JFROG_URL }}
+        JFROG_USER: ${{ secrets.JFROG_USER }}
+        JFROG_PASSWORD: ${{ secrets.JFROG_PASSWORD }}
+
+    - name: Cleanup JFrog CLI config
+      run: ./jfrog config remove my-jfrog
