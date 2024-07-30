@@ -15,5 +15,10 @@ $msiargs = $msiDetails.msiargs
 $nupkgpath = $msiDetails.nupkgpath
 $upgrade = $msiDetails.upgrade
 
+$workspacePath = $env:GITHUB_WORKSPACE
+
+# Ensure the path to the nupkg file is correct
+$nupkgFullPath = Join-Path -Path $workspacePath -ChildPath $nuppkgpath
+
 # Install the nupkg file using Chocolatey
-choco install $name  --source=$nupkgpath -y
+choco install $name  --source=$nupkgFullPath -y
