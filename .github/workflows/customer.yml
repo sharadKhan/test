@@ -1,0 +1,40 @@
+name: Customer
+on:
+  workflow_call:
+    inputs:
+        customerName:
+            description: 'Name of the customer'
+            required: true
+            type: string
+        version:
+            description: 'Version of the MSI'
+            required: true
+            type: string
+        msiName:
+            description: 'Name of the MSI'
+            required: true
+            type: string
+        msiPath:
+            description: 'Path to the MSI'
+            required: true
+            type: string
+        msiArgs:
+            description: 'Arguments for the MSI in JSON format'
+            required: true
+            type: string
+
+jobs:
+  read-json:
+    runs-on: windows-latest
+    steps:
+        - name: Install Chocolatey
+          run: |
+            Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+        - name: Install JFROG CLI
+          uses: jfrog/setup-jfrog-cli@v4
+          env:
+            JF_URL: ${{ secrets.JFROG_ARTIFACTORY_URL }}
+            JF_ACCESS_TOKEN: ${{ secrets.JFROG_TOKEN }} 
+        - name: Install
+          run: |
+            choco install $msiName --version $version --source="${{ secrets.JFROG_ARTIFACTORY_URL}}api/nuget/${{secrets.JFROG_REPOSITORY}}/"

@@ -1,5 +1,5 @@
 ---
-name: Build and Deploy MSI
+name: Create and Upload Chocolatey
 on:
   push:
     branches:
@@ -17,8 +17,13 @@ jobs:
         uses: actions/checkout@v2
       - name: Setup Choco package
         run:  Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iwr https://community.chocolatey.org/install.ps1 -UseBasicParsing | iex
-      - name: Create packages
-        run: ./scripts/script.ps1 --msiname "=${{ env.MSI_NAME }}"
+      - name: Install JFROG CLI
+        uses: jfrog/setup-jfrog-cli@v4
+        env:
+          JF_URL: ${{ secrets.JFROG_ARTIFACTORY_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.JFROG_TOKEN }} 
+      - name: Create package
+        run: ./scripts/create-package.ps1 --msiname "=${{ env.MSI_NAME }}"
         shell: pwsh
       - name: Upload package
         run: ./scripts/script.ps1 

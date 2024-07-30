@@ -1,0 +1,15 @@
+{
+  "customer1": {
+    "version": "1.0.0",
+    "msis": [
+      {
+        "name": "MSIDemo",
+        "msipath": ".\\builds\\MSIDemo.msi",
+        "msiargs": {
+          "argument1": "value1",
+          "argument2": "value2"
+        }
+      }
+    ]
+  }
+}
