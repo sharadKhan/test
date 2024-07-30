@@ -1,76 +1,54 @@
-name: Install MSIs for Customer
+name: Install MSI on Customer VM
 
 on:
   workflow_dispatch:
     inputs:
       customer_name:
-        description: 'Name of the customer'
+        description: 'Customer name'
         required: true
-        default: 'default-customer'
 
 jobs:
-  install-msis:
-    runs-on: ubuntu-latest
+  install-msi:
+    runs-on: windows-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'
+      - name: Set up environment variables
+        run: |
+          echo "CUSTOMER_NAME=${{ github.event.inputs.customer_name }}" >> $GITHUB_ENV
 
-    - name: Install jq
-      run: sudo apt-get install jq -y
+      - name: Install Chocolatey
+        run: |
+          Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 
-    - name: Fetch MSI details
-      id: fetch-msi
-      run: |
-        customer_name=${{ github.event.inputs.customer_name }}
-        # Fetch the MSI details from a configuration file or a database
-        # For demonstration, assuming a JSON file with customer details
-        msi_details=$(cat customers.json | jq -r --arg customer "$customer_name" '.customers[$customer]')
-        echo "::set-output name=msi_details::$msi_details"
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run PowerShell script on remote machine
+        uses: neilotoole/winrm-action@v1
+        with:
+          username: 'Sonata\m.abhisehek'
+          password: 'Gv@123456'
+          hostname: '172.29.74.154'
+          command: |
+            # Copy repository to remote host
+            $repoPath = Join-Path -Path $env:GITHUB_WORKSPACE -ChildPath '.'
+            Copy-Item -Path $repoPath -Destination C:\Temp\Repo -Recurse -Force
 
-    - name: Configure JFrog CLI
-      run: |
-        curl -fL https://getcli.jfrog.io | sh
-        ./jfrog config add my-jfrog --url=$JFROG_URL --user=$JFROG_USER --password=$JFROG_PASSWORD --interactive=false
-      env:
-        JFROG_URL: ${{ secrets.JFROG_URL }}
-        JFROG_USER: ${{ secrets.JFROG_USER }}
-        JFROG_PASSWORD: ${{ secrets.JFROG_PASSWORD }}
+            # Set environment variable
+            $customer_name = "${{ github.event.inputs.customer_name }}"
 
-    - name: Download Chocolatey package
-      run: |
-        msi_details=${{ steps.fetch-msi.outputs.msi_details }}
-        package_name=$(echo $msi_details | jq -r '.package_name')
-        ./jfrog rt download --spec=$package_name
-      env:
-        JFROG_URL: ${{ secrets.JFROG_URL }}
-        JFROG_USER: ${{ secrets.JFROG_USER }}
-        JFROG_PASSWORD: ${{ secrets.JFROG_PASSWORD }}
+            # Read configuration file
+            $configFile = "C:\Temp\Repo\test.json"
+            $config = Get-Content -Raw -Path $configFile | ConvertFrom-Json
 
-    - name: Install SSH client
-      run: sudo apt-get install openssh-client -y
+            # Get the MSI details for the specified customer
+            $msiDetails = $config.$customer_name.msifile1[0]
 
-    - name: Install MSIs on customer machine
-      run: |
-        msi_details=${{ steps.fetch-msi.outputs.msi_details }}
-        msis=$(echo $msi_details | jq -r '.msis[]')
-        for msi in $msis; do
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.CUSTOMER_VM_IP }} "choco install $msi -y --source jfrog"
-        done
-      env:
-        SSH_USER: ${{ secrets.SSH_USER }}
-        CUSTOMER_VM_IP: ${{ secrets.CUSTOMER_VM_IP }}
-        CHOCO_SOURCE: ${{ secrets.CHOCO_SOURCE }}
-        JFROG_URL: ${{ secrets.JFROG_URL }}
-        JFROG_USER: ${{ secrets.JFROG_USER }}
-        JFROG_PASSWORD: ${{ secrets.JFROG_PASSWORD }}
+            $name = $msiDetails.name
+            $version = $msiDetails.version
+            $msipath = Join-Path -Path "C:\Temp\Repo" -ChildPath $msiDetails.msipath
+            $msiargs = $msiDetails.msiargs
+            $nupkgpath = Join-Path -Path "C:\Temp\Repo" -ChildPath $msiDetails.nupkgpath
 
-    - name: Cleanup JFrog CLI config
-      run: ./jfrog config remove my-jfrog
+            # Install the nupkg file using Chocolatey
+            choco install $name --source=$nupkgpath -y
