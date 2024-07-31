@@ -1,36 +1,27 @@
----
-name: Create and Upload Chocolatey
+name: Create and upload chocolatey package to JFrog
 on:
-  push:
-    branches:
-      - feature
+  workflow_dispatch
 jobs:
   build:
     runs-on: windows-latest
-    env:
-      artifactPath: "MSIDemo.22.0.0.43559.nupkg"
-      gcpRepository: "chocopackages"
-      MSI_NAME: "MSIDemo"
-      packageVersion: "v1.0.2"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      
+
       - name: Setup Choco package
         run:  Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iwr https://community.chocolatey.org/install.ps1 -UseBasicParsing | iex
-      
+
       - name: Install JFROG CLI
         uses: jfrog/setup-jfrog-cli@v4
         env:
-          JF_URL: ${{ secrets.JFROG_ARTIFACTORY_URL }}
+          JF_URL: ${{ vars.JFROG_ARTIFACTORY_URL }}
           JF_ACCESS_TOKEN: ${{ secrets.JFROG_TOKEN }} 
-      
-      - name: Create package
-        run: ./scripts/create-package.ps1 -version 11.0.0 -filename MSIDemo -packagepath "D:\CHOCO\packs" -msipath "builds\MSIDemo.msi" --force
-        shell: pwsh
-      
+
+      #- name: Create package - Todo
       - name: Upload package
-        run: ./scripts/script.ps1 
+        run: |
+          jf rt u "MSIDemo.22.0.0.50000.nupkg" ${{ vars.JFROG_REPOSITORY }}   
+
 
 
   
