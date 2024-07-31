@@ -1,32 +1,33 @@
 param (
     [string]$version,
-    [string]$filename,
+    [string]$msiname,
     [string]$packagepath,
     [string]$msipath
 )
 
 $currentPath = Get-Location
-$filename = $filename -replace ' ', ''
+
+# Remove space as there should not be any spaces got .nuspec file
+$msiname = $msiname -replace ' ', ''
 
 # Get checksum
 $checksum = Get-FileHash -Path $msipath -Algorithm SHA256 | Select-Object -ExpandProperty Hash
 
 # Set paths
 Set-Location -Path $packagepath
-$packageDir = Join-Path -Path (Get-Location) -ChildPath $filename
-$nuspecPath = Join-Path -Path $packageDir -ChildPath "$filename.nuspec"
+$packageDir = Join-Path -Path (Get-Location) -ChildPath $msiname
+$nuspecPath = Join-Path -Path $packageDir -ChildPath "$msiname.nuspec"
 $installScriptPath = Join-Path -Path $packageDir -ChildPath "tools\chocolateyinstall.ps1"
 
 
 # Create a new Chocolatey package
-choco new $filename --version $version
+choco new $msiname --version $version
 
 $xml = [xml](Get-Content $nuspecPath)
-$xml.package.metadata.id = $filename
-$xml.package.metadata.title = $filename
-$xml.package.metadata.authors = "UKG"
+$xml.package.metadata.id = $msiname
+$xml.package.metadata.title = $msiname
 $xml.package.metadata.summary = ""
-$xml.package.metadata.description = $filename
+$xml.package.metadata.description = $msiname
 $projectUrlNode = $xml.package.metadata.SelectSingleNode("projectUrl")
 $authorsNode = $xml.package.metadata.SelectSingleNode("authors")
 if ($projectUrlNode) {
@@ -39,17 +40,14 @@ $xml.Save($nuspecPath)
 
 $installScriptContent = @"
 `$pp = Get-PackageParameters
-Write-Host `$pp['filelocation']
-Write-Host `$pp['arguments']
 `$fileLocation = `$pp['filelocation']
 `$finalargs = `$pp['arguments'] -replace '&space;', ' '
-Write-Host "final arguments `$finalargs"
 
 `$packageArgs = @{
     packageName    = `$env:ChocolateyPackageName
     fileType       = 'MSI'
     file           = `$fileLocation
-    softwareName   = '$filename'
+    softwareName   = '$msiname'
     checksum64     = '$checksum'
     checksumType64 = 'sha256'
 
@@ -65,4 +63,4 @@ Set-Content -Path $installScriptPath -Value $installScriptContent
 # Pack the package
 choco pack $nuspecPath
 Set-Location -Path $currentPath
-Write-Output "Package processed successfully: $filename"
+Write-Output "Package processed successfully: $msiname"

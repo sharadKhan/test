@@ -1,6 +1,16 @@
 name: Create and upload chocolatey package to JFrog
 on:
-  workflow_dispatch
+  workflow_dispatch:
+    inputs:
+      MSI_NAME:
+        description: 'MSI Name'
+        required: true
+      VERSION:
+        description: 'Version'
+        required: true
+      MSI_PATH:
+        description: 'MSI PATH'
+        required: true
 jobs:
   build:
     runs-on: windows-latest
@@ -17,10 +27,13 @@ jobs:
           JF_URL: ${{ vars.JFROG_ARTIFACTORY_URL }}
           JF_ACCESS_TOKEN: ${{ secrets.JFROG_TOKEN }} 
 
-      #- name: Create package - Todo
+      - name: Create package 
+        run: ./scripts/create-package.ps1 -version "${{ github.event.inputs.VERSION }}" -filename "${{ github.event.inputs.MSI_NAME }}"  -packagepath ".\output"  -msipath "${{ github.event.inputs.MSI_PATH }}" --force
+        shell: pwsh
+
       - name: Upload package
         run: |
-          jf rt u "MSIDemo.22.0.0.50000.nupkg" ${{ vars.JFROG_REPOSITORY }}   
+          jf rt u ".\output\${{ github.event.inputs.MSI_NAME }}.${{ github.event.inputs.VERSION }}.nupkg" ${{ vars.JFROG_REPOSITORY }}   
 
 
 

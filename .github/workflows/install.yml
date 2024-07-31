@@ -18,14 +18,17 @@ jobs:
       - name: Set up environment variables
         run: |
           echo "CUSTOMER_NAME=${{ github.event.inputs.customer_name }}" >> $GITHUB_ENV
-          echo "REMOTE_HOST='172.29.74.154' " 
-          echo "REMOTE_USER='SONATA\m.abhishek' "
-          echo "REMOTE_PASSWORD='Gv@123456' " 
 
       - name: Install Chocolatey
         run: |
           Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 
+       - name: Install JFROG CLI
+        uses: jfrog/setup-jfrog-cli@v4
+        env:
+          JF_URL: ${{ vars.JFROG_ARTIFACTORY_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.JFROG_TOKEN }} 
+          
       - name: Run PowerShell script to install MSI
         run: pwsh ./new-install-msi.ps1 -customer_name customer1 -remote_host 172.29.74.154 -remote_user SONATA\m.abhishek -remote_password Gv@123456
         shell: pwsh
