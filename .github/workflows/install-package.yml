@@ -1,6 +1,6 @@
 name: Install package for Customer
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
         CUSTOMER_NAME:
           description: 'Name of the Customer'

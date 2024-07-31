@@ -1,9 +1,6 @@
----
 name: Build and Deploy MSI
 on:
-  push:
-    branches:
-      - feature
+  workflow_dispatch:
 jobs:
   build:
     runs-on: windows-latest
@@ -13,35 +10,33 @@ jobs:
       packageName: "MSIDemo"
       packageVersion: "v1.0.2"
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Setup Choco package
-        run: >
-          Set-ExecutionPolicy Bypass -Scope Process
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Setup Choco package
+      run: >
+        Set-ExecutionPolicy Bypass -Scope Process #magic___^_^___line Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+    - name: Set up Google Cloud SDK
+      uses: google-github-actions/setup-gcloud@v1
+      with:
+        version: 'latest'
+        service_account_key: ${{ secrets.GCPKEY }}
+        export_default_credentials: true
+    - name: Google Auth
+      id: auth
+      uses: 'google-github-actions/auth@v2'
+      with:
+        credentials_json: '${{ secrets.GCPKEY }}'
+    - name: Create Repository
+      run: |
+        Write-Output "Creating Artifact Registry repository if it does not exist..."
+        $repoExists = & gcloud artifacts repositories list --location=${{ secrets.GCPREGION }} --filter="name~${{env.gcpRepository}}" --format="value(name)"
+        if (-not $repoExists) {
+            gcloud artifacts repositories create ${{env.gcpRepository}} --repository-format=generic --location=${{ secrets.GCPREGION }}  --project=${{ secrets.GCPPROJECT }}
+        } else {
+            Write-Output "Repository ${{env.gcpRepository}} already exists."
+        }
+    - name: Push artifact
+      run: |
+        gcloud artifacts generic upload --source=${{env.artifactPath}} --project=${{ secrets.GCPPROJECT }} --location=${{ secrets.GCPREGION }} --repository=${{env.gcpRepository}} --package=${{env.packageName}} --version=${{env.packageVersion}}
 
-          Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-      - name: Set up Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v1
-        with:
-          version: 'latest'
-          service_account_key: ${{ secrets.GCPKEY }}
-          export_default_credentials: true
-      - name: Google Auth
-        id: auth
-        uses: 'google-github-actions/auth@v2'
-        with:
-          credentials_json: '${{ secrets.GCPKEY }}'
-      - name: Create Repository
-        run: |
-          Write-Output "Creating Artifact Registry repository if it does not exist..."
-          $repoExists = & gcloud artifacts repositories list --location=${{ secrets.GCPREGION }} --filter="name~${{env.gcpRepository}}" --format="value(name)"
-          if (-not $repoExists) {
-              gcloud artifacts repositories create ${{env.gcpRepository}} --repository-format=generic --location=${{ secrets.GCPREGION }}  --project=${{ secrets.GCPPROJECT }}
-          } else {
-              Write-Output "Repository ${{env.gcpRepository}} already exists."
-          }
-      - name: Push artifact
-        run: |
-          gcloud artifacts generic upload --source=${{env.artifactPath}} --project=${{ secrets.GCPPROJECT }} --location=${{ secrets.GCPREGION }} --repository=${{env.gcpRepository}} --package=${{env.packageName}} --version=${{env.packageVersion}}
-  
- 
+
