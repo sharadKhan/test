@@ -13,6 +13,13 @@ $msiname = $msiname -replace ' ', ''
 # Get checksum
 $checksum = Get-FileHash -Path $msipath -Algorithm SHA256 | Select-Object -ExpandProperty Hash
 
+
+if (-Not (Test-Path -Path $PackagePath)) {
+    # Create the path if it doesn't exist
+    New-Item -Path $PackagePath -ItemType Directory -Force
+    Write-Output "Created directory: $PackagePath"
+}
+
 # Set paths
 Set-Location -Path $packagepath
 $packageDir = Join-Path -Path (Get-Location) -ChildPath $msiname
