@@ -1,0 +1,42 @@
+{
+    "customers": [
+        {
+            "customer": "CustomerA",
+            "versionToInstall": "1.0.0",
+            "virtualMachines": [
+                {
+                    "ipAddress": "VM1",
+                    "msis": [
+                        {
+                            "msi": "MSI1",
+                            "arguments": {
+                                "licenseKey": "XXXXX-XXXXX-XXXXX-XXXXX",
+                                "featureXEnabled": true,
+                                "timeout": 30
+                            }
+                        },
+                        {
+                            "msi": "MSI2",
+                            "arguments": {
+                                "runAsAdmin": false,
+                                "maxRetries": 5,
+                                "debugMode": false
+                            }
+                        }
+                    ]
+                },
+                {
+                    "ipAddress": "VM2",
+                    "msis": [
+                        {
+                            "msi": "MSI3",
+                            "arguments": {
+                                "debugMode": false
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
