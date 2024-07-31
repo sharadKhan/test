@@ -1,13 +1,11 @@
 param (
     [string]$version,
     [string]$msiName,
-    [string]$jfrogArifactoryUrl,
-    [string]$jfrogArifactoryToken,
-    [string]$jfrogArifactoryUserId
+    [string]$msiArguments
 )
 
-$logDir = "log"
-$logFile = "$logDir/install-package-log.txt"
+$logDir = "logs"
+$logFile = "$logDir/install-package-log.log"
 
 # Function to install Chocolatey if it's not already installed
 function Install-Choco {
@@ -48,20 +46,16 @@ function Write-Log {
     Write-Output $timestampedMessage
 }
 
-
-
 # Function to install a new version of a package
 function Install-NewVersion {
     param (
         [string]$packageName,
         [string]$version,
-        [string]$sourceUrl,
-        [string]$userId,
-        [string]$userToken
+        [string]$packageParamters
     )
 
     try {
-        $installCommand = "choco install $packageName --version $version --package-parameters=`"`'/filelocation:D:\CHOCO\MSIDemo.msi /arguments:/qn&space;/norestart`'`" --source=$sourceUrl --user=$userId --password=$userToken -y --force"
+        $installCommand = "choco install $packageName --version $version --package-parameters=`"`'$packageParamters`'`" --source=`${{ vars.JFROG_ARTIFACTORY_URL }}/api/nuget/{{ vars.JFROG_REPOSITORY }}` --user=`${{ vars.JFROG_USERID }}` --password=`${{ secrets.JFROG_TOKEN }}` -y --force"
         Write-Output "Running command: $installCommand"
 
         # Print the output of Invoke-Expression $installCommand
@@ -100,12 +94,12 @@ Install-Choco
 $previousVersion = Get-PreviousVersion -packageName $msiName
 Write-Output "Previous version of $msiName : $previousVersion"
 
-if (Install-NewVersion -packageName $msiName -version $version -sourceUrl $jfrogArifactoryUrl -userId $jfrogArifactoryUserId -userToken $jfrogArifactoryToken) {
+if (Install-NewVersion -packageName $msiName -version $version -packageParamters $msiArguments) {
     Write-Output "$msiName version $version installed successfully."
 } else {
     # Add rollback
 }
 
 # sample to run the script with arguments
-# .\install-package.ps1 -version '2.0.0' -msiName 'MSIDemo' -jfrogArifactoryUrl 'https://sonatapoc.jfrog.io/artifactory/api/nuget/chocopackages-nuget/' -jfrogArifactoryToken 'Sharad@123' -jfrogArifactoryUserId 'sharad1'
+# .\install-package.ps1 -version '2.0.0' -msiName 'MSIDemo' -jfrogArtifactoryUrl 'https://sonatapoc.jfrog.io/artifactory/api/nuget/chocopackages-nuget/' -jfrogArtifactoryToken 'Sharad@123' -jfrogArtifactoryUserId 'sharad1'
 

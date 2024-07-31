@@ -48,22 +48,22 @@ if ($virtualMachines.Count -gt 0) {
                     $arguments = $msi.arguments
             
                     # Construct the MSI install command
-                    $argumentString = ""
+                    $argumentString = "/filelocation:$msiPath"
                     foreach ($key in $arguments.Keys) {
                         $argumentString += "/$key=$($arguments[$key]) "
                     }
-                    $installCommand = "msiexec /i $msiPath $argumentString"
+                    $installCommand = "install-package.ps1 -version $versionToInstall -msiName $msiName -msiArguments $argumentString"
             
                     $startTime = Get-Date
                     Write-Output "[$startTime] Installing $msiName on $ipAddress with command: $installCommand"
-                    #Start-Sleep -Seconds 3
+                    Start-Sleep -Seconds 3
                     $endTime = Get-Date
                     Write-Output "[$endTime] Completed installation of $msiName on $ipAddress"
                     # Invoke-Command -ComputerName $ipAddress -ScriptBlock {
                     #     param (
                     #         $installCommand
                     #     )
-                    #     Invoke-Expression $installCommand
+                    #     & $installCommand
                     # } -ArgumentList $installCommand
                 }
             }
@@ -83,4 +83,4 @@ Write-Output "Installation process completed for all customers."
 
 
 # sample to run the script with arguments
-# .\deploy-package.ps1 -customerName 'CustomerA'
+# .\install-customer-packages.ps1 -customerName 'CustomerA'
