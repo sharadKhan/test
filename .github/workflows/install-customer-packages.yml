@@ -12,6 +12,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Deploy package on VMs 
-        run: ./scripts/deploy-package.ps1 -customerName "${{ github.event.inputs.CUSTOMER_NAME }}"
+        run: ./scripts/install-customer-packages.ps1 -customerName "${{ github.event.inputs.CUSTOMER_NAME }}"
         shell: pwsh
+
            
