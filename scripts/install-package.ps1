@@ -1,16 +1,10 @@
-# param (
-#     [string]$version,
-#     [string]$msiname,
-#     [string]$jfrogarifactoryurl,
-#     [string]$jfrogarifactorytoken,
-#     [string]$jfrogarifactoryuserId
-# )
-
-$version = '2.0.0'
-$msiname = 'MSIDemo'
-$jfrogarifactoryurl = 'https://sonatapoc.jfrog.io/artifactory/api/nuget/chocopackages-nuget/'
-$jfrogarifactorytoken = 'Sharad@123'
-$jfrogarifactoryuserId = 'sharad1'
+param (
+    [string]$version,
+    [string]$msiName,
+    [string]$jfrogArifactoryUrl,
+    [string]$jfrogArifactoryToken,
+    [string]$jfrogArifactoryUserId
+)
 
 $logDir = "log"
 $logFile = "$logDir/install-package-log.txt"
@@ -104,11 +98,15 @@ if (-not (Test-Path -Path $logFile)) {
 # Main script
 Install-Choco
 
-$previousVersion = Get-PreviousVersion -packageName $msiname
-Write-Output "Previous version of $msiname : $previousVersion"
+$previousVersion = Get-PreviousVersion -packageName $msiName
+Write-Output "Previous version of $msiName : $previousVersion"
 
-if (Install-NewVersion -packageName $msiname -version $version -sourceUrl $jfrogarifactoryurl -userId $jfrogarifactoryuserId -userToken $jfrogarifactorytoken) {
-    Write-Output "$msiname version $version installed successfully."
+if (Install-NewVersion -packageName $msiName -version $version -sourceUrl $jfrogArifactoryUrl -userId $jfrogArifactoryUserId -userToken $jfrogArifactoryToken) {
+    Write-Output "$msiName version $version installed successfully."
 } else {
     # Add rollback
 }
+
+# sample to run the script with arguments
+# .\install-package.ps1 -version '2.0.0' -msiName 'MSIDemo' -jfrogArifactoryUrl 'https://sonatapoc.jfrog.io/artifactory/api/nuget/chocopackages-nuget/' -jfrogArifactoryToken 'Sharad@123' -jfrogArifactoryUserId 'sharad1'
+

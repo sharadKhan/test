@@ -1,44 +1,40 @@
 param (
     [string]$version,
-    [string]$msiname,
-    [string]$packagepath,
-    [string]$msipath
+    [string]$msiName,
+    [string]$packagePath,
+    [string]$msiPath
 )
-# $version = '11.0.0'
-# $msiname = 'MSIDemo'
-# $packagepath = 'D:\CHOCO\packs'
-# $msipath = '..\builds\MSIDemo.msi'
 
 $currentPath = Get-Location
 
 # Remove space as there should not be any spaces got .nuspec file
-$msiname = $msiname -replace ' ', ''
+$msiName = $msiName -replace ' ', ''
 
 # Get checksum
-$checksum = Get-FileHash -Path $msipath -Algorithm SHA256 | Select-Object -ExpandProperty Hash
+$checksum = Get-FileHash -Path $msiPath -Algorithm SHA256 | Select-Object -ExpandProperty Hash
 
 
-if (-Not (Test-Path -Path $PackagePath)) {
+if (-Not (Test-Path -Path $packagePath)) {
     # Create the path if it doesn't exist
-    New-Item -Path $PackagePath -ItemType Directory -Force
-    Write-Output "Created directory: $PackagePath"
+    New-Item -Path $packagePath -ItemType Directory -Force
+    Write-Output "Created directory: $packagePath"
 }
 
 # Set paths
-Set-Location -Path $PackagePath
-$packageDir = Join-Path -Path (Get-Location) -ChildPath $msiname
-$nuspecPath = Join-Path -Path $packageDir -ChildPath "$msiname.nuspec"
+Set-Location -Path $packagePath
+$packageDir = Join-Path -Path (Get-Location) -ChildPath $msiName
+$nuspecPath = Join-Path -Path $packageDir -ChildPath "$msiName.nuspec"
 $installScriptPath = Join-Path -Path $packageDir -ChildPath "tools\chocolateyinstall.ps1"
 
 
 # Create a new Chocolatey package
-choco new $msiname --version $version
+choco new $msiName --version $version
 
 $xml = [xml](Get-Content $nuspecPath)
-$xml.package.metadata.id = $msiname
-$xml.package.metadata.title = $msiname
+$xml.package.metadata.id = $msiName
+$xml.package.metadata.title = $msiName
 $xml.package.metadata.summary = ""
-$xml.package.metadata.description = $msiname
+$xml.package.metadata.description = $msiName
 $projectUrlNode = $xml.package.metadata.SelectSingleNode("projectUrl")
 $authorsNode = $xml.package.metadata.SelectSingleNode("authors")
 if ($projectUrlNode) {
@@ -61,7 +57,7 @@ Write-Host "final arguments `$finalargs"
     packageName    = `$env:ChocolateyPackageName
     fileType       = 'MSI'
     file           = `$fileLocation
-    softwareName   = '$msiname'
+    softwareName   = '$msiName'
     checksum64     = '$checksum'
     checksumType64 = 'sha256'
 
@@ -77,4 +73,10 @@ Set-Content -Path $installScriptPath -Value $installScriptContent
 # Pack the package
 choco pack $nuspecPath
 Set-Location -Path $currentPath
-Write-Output "Package processed successfully: $msiname"
+Write-Output "Package processed successfully: $msiName"
+
+
+
+# sample to run the script with arguments
+# .\create-package.ps1 -version '10.0.1' -msiName 'MSIDemo' -packagePath 'D:\CHOCO\packs' -msiPath '..\builds\MSIDemo.msi'
+

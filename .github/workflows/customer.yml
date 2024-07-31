@@ -2,32 +2,16 @@ name: Customer
 on:
   workflow_call:
     inputs:
-        MSI_NAME:
-          description: 'Name of the MSI'
+        CUSTOMER_NAME:
+          description: 'Name of the Customer'
           required: true
           type: string
-        VERSION:
-            description: 'Version of the MSI'
-            required: true
-            type: string
-        MSI_PATH:
-            description: 'Path to the MSI'
-            required: true
-            type: string
-        MSI_ARGS:
-            description: 'Arguments for the MSI in JSON format'
-            required: true
-            type: string
-        VM_IP:
-            description: 'IP address of the VM'
-            required: true
-            type: string
+        
 jobs:
   read-json:
     runs-on: windows-latest
     steps:
-        - name: Create package 
-          run: |
-            Invoke-Command -ComputerName  ${{ github.event.inputs.VM_IP }} -FilePath ".\scripts\install-package.ps1  "${{ github.event.inputs.VERSION }}" -msiname "${{ github.event.inputs.MSI_NAME }}"  -packagepath "./output"  -msipath "${{ github.event.inputs.MSI_PATH }}"
-          shell: pwsh
+        - name: Deploy package on VMs 
+        run: ./scripts/deploy-package.ps1 -customerName "${{ github.event.inputs.CUSTOMER_NAME }}"
+        shell: pwsh
            
