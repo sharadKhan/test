@@ -9,18 +9,18 @@
                     "msis": [
                         {
                             "msi": "MSI1",
+                            "msipath": "..\\builds\\MSIDemo.msi",
                             "arguments": {
-                                "licenseKey": "XXXXX-XXXXX-XXXXX-XXXXX",
-                                "featureXEnabled": true,
-                                "timeout": 30
+                                "argument1": "/quite",
+                                "argument2": "/norestart"
                             }
                         },
                         {
                             "msi": "MSI2",
+                            "msipath": "..\\builds\\MSIDemo.msi",
                             "arguments": {
-                                "runAsAdmin": false,
-                                "maxRetries": 5,
-                                "debugMode": false
+                                "argument1": "/quite",
+                                "argument2": "/norestart"
                             }
                         }
                     ]
@@ -30,8 +30,37 @@
                     "msis": [
                         {
                             "msi": "MSI3",
+                            "msipath": "..\\builds\\MSIDemo.msi",
                             "arguments": {
-                                "debugMode": false
+                                "argument1": "/quite",
+                                "argument2": "/norestart"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "customer": "CustomerB",
+            "versionToInstall": "1.0.0",
+            "virtualMachines": [
+                {
+                    "ipAddress": "VM3",
+                    "msis": [
+                        {
+                            "msi": "MSI4",
+                            "msipath": "..\\builds\\MSIDemo.msi",
+                            "arguments": {
+                                "argument1": "/quite",
+                                "argument2": "/norestart"
+                            }
+                        },
+                        {
+                            "msi": "MSI5",
+                            "msipath": "..\\builds\\MSIDemo.msi",
+                            "arguments": {
+                                "argument1": "/quite",
+                                "argument2": "/norestart"
                             }
                         }
                     ]
