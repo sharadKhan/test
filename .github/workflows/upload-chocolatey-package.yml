@@ -28,12 +28,12 @@ jobs:
           JF_ACCESS_TOKEN: ${{ secrets.JFROG_TOKEN }} 
 
       - name: Create package 
-        run: ./scripts/create-package.ps1 -version "${{ github.event.inputs.VERSION }}" -msiname "${{ github.event.inputs.MSI_NAME }}"  -packagepath "./output"  -msipath "${{ github.event.inputs.MSI_PATH }}"
+        run: ./scripts/create-package.ps1 -version "${{ github.event.inputs.VERSION }}" -msiname "${{ github.event.inputs.MSI_NAME }}"  -packagepath "."  -msipath "${{ github.event.inputs.MSI_PATH }}"
         shell: pwsh
 
       - name: Upload package
         run: |
-          jf rt u ".\output\${{ github.event.inputs.MSI_NAME }}.${{ github.event.inputs.VERSION }}.nupkg" ${{ vars.JFROG_REPOSITORY }}   
+          jf rt u ".\${{ github.event.inputs.MSI_NAME }}.${{ github.event.inputs.VERSION }}.nupkg" ${{ vars.JFROG_REPOSITORY }}   
 
 
 

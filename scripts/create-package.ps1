@@ -4,6 +4,10 @@ param (
     [string]$packagepath,
     [string]$msipath
 )
+# $version = '11.0.0'
+# $msiname = 'MSIDemo'
+# $packagepath = 'D:\CHOCO\packs'
+# $msipath = '..\builds\MSIDemo.msi'
 
 $currentPath = Get-Location
 
@@ -47,8 +51,11 @@ $xml.Save($nuspecPath)
 
 $installScriptContent = @"
 `$pp = Get-PackageParameters
+Write-Host `$pp['filelocation']
+Write-Host `$pp['arguments']
 `$fileLocation = `$pp['filelocation']
 `$finalargs = `$pp['arguments'] -replace '&space;', ' '
+Write-Host "final arguments `$finalargs"
 
 `$packageArgs = @{
     packageName    = `$env:ChocolateyPackageName
