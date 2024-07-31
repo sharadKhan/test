@@ -21,7 +21,7 @@ if (-Not (Test-Path -Path $PackagePath)) {
 }
 
 # Set paths
-Set-Location -Path $packagepath
+Set-Location -Path $PackagePath
 $packageDir = Join-Path -Path (Get-Location) -ChildPath $msiname
 $nuspecPath = Join-Path -Path $packageDir -ChildPath "$msiname.nuspec"
 $installScriptPath = Join-Path -Path $packageDir -ChildPath "tools\chocolateyinstall.ps1"
