@@ -2,39 +2,32 @@ name: Customer
 on:
   workflow_call:
     inputs:
-        customerName:
-            description: 'Name of the customer'
-            required: true
-            type: string
-        version:
+        MSI_NAME:
+          description: 'Name of the MSI'
+          required: true
+          type: string
+        VERSION:
             description: 'Version of the MSI'
             required: true
             type: string
-        msiName:
-            description: 'Name of the MSI'
-            required: true
-            type: string
-        msiPath:
+        MSI_PATH:
             description: 'Path to the MSI'
             required: true
             type: string
-        msiArgs:
+        MSI_ARGS:
             description: 'Arguments for the MSI in JSON format'
             required: true
             type: string
-
+        VM_IP:
+            description: 'IP address of the VM'
+            required: true
+            type: string
 jobs:
   read-json:
     runs-on: windows-latest
     steps:
-        - name: Install Chocolatey
+        - name: Create package 
           run: |
-            Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-        - name: Install JFROG CLI
-          uses: jfrog/setup-jfrog-cli@v4
-          env:
-            JF_URL: ${{ secrets.JFROG_ARTIFACTORY_URL }}
-            JF_ACCESS_TOKEN: ${{ secrets.JFROG_TOKEN }} 
-        - name: Install
-          run: |
-            choco install $msiName --version $version --source="${{ secrets.JFROG_ARTIFACTORY_URL}}api/nuget/${{secrets.JFROG_REPOSITORY}}/"
+            Invoke-Command -ComputerName  ${{ github.event.inputs.VM_IP }} -FilePath ".\scripts\install-package.ps1  "${{ github.event.inputs.VERSION }}" -msiname "${{ github.event.inputs.MSI_NAME }}"  -packagepath "./output"  -msipath "${{ github.event.inputs.MSI_PATH }}"
+          shell: pwsh
+           
