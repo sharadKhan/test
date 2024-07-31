@@ -15,16 +15,20 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+      
       - name: Setup Choco package
         run:  Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iwr https://community.chocolatey.org/install.ps1 -UseBasicParsing | iex
+      
       - name: Install JFROG CLI
         uses: jfrog/setup-jfrog-cli@v4
         env:
           JF_URL: ${{ secrets.JFROG_ARTIFACTORY_URL }}
           JF_ACCESS_TOKEN: ${{ secrets.JFROG_TOKEN }} 
+      
       - name: Create package
-        run: ./scripts/create-package.ps1 --msiname "=${{ env.MSI_NAME }}"
+        run: ./scripts/create-package.ps1 -version 11.0.0 -filename MSIDemo -packagepath "D:\CHOCO\packs" -msipath "builds\MSIDemo.msi" --force
         shell: pwsh
+      
       - name: Upload package
         run: ./scripts/script.ps1 
 
