@@ -33,7 +33,7 @@ jobs:
 
       - name: Upload package
         run: |
-          jf rt u ".\output\${{ github.event.inputs.MSI_NAME }}.${{ github.event.inputs.VERSION }}.nupkg" ${{ vars.JFROG_REPOSITORY }}   
+          jf rt u ".\${{ github.event.inputs.MSI_NAME }}.${{ github.event.inputs.VERSION }}.nupkg" ${{ vars.JFROG_REPOSITORY }}   
 
 
 
