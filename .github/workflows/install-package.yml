@@ -1,4 +1,4 @@
-name: Customer
+name: Install package for Customer
 on:
   workflow_call:
     inputs:
@@ -11,7 +11,7 @@ jobs:
   read-json:
     runs-on: windows-latest
     steps:
-        - name: Deploy package on VMs 
+      - name: Deploy package on VMs 
         run: ./scripts/deploy-package.ps1 -customerName "${{ github.event.inputs.CUSTOMER_NAME }}"
         shell: pwsh
            

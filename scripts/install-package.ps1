@@ -24,7 +24,6 @@ function Get-PreviousVersion {
     param (
         [string]$packageName
     )
-
     $package = choco list --exact --include-programs $packageName
     foreach ($line in $package) {
         if ($line -match "$packageName (\d+\.\d+\.\d+)") {

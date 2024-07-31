@@ -17,7 +17,6 @@ if ($null -eq $customer) {
     exit
 }
 
-
 $customerName = $customer.customer
 $versionToInstall = $customer.versionToInstall
 $virtualMachines = $customer.virtualMachines
@@ -57,7 +56,7 @@ if ($virtualMachines.Count -gt 0) {
             
                     $startTime = Get-Date
                     Write-Output "[$startTime] Installing $msiName on $ipAddress with command: $installCommand"
-                    Start-Sleep -Seconds 3
+                    #Start-Sleep -Seconds 3
                     $endTime = Get-Date
                     Write-Output "[$endTime] Completed installation of $msiName on $ipAddress"
                     # Invoke-Command -ComputerName $ipAddress -ScriptBlock {
