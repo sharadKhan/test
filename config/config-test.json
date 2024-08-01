@@ -1,0 +1,20 @@
+{
+    "customers": [
+        {
+            "customer": "CustomerA",
+            "versionToInstall": "3.0.0",
+            "virtualMachines": [
+                {
+                    "ipAddress": "172.29.74.154",
+                    "msis": [
+                        {
+                            "msi": "MSIDemo",
+                            "msipath": "\\\\BG4PHS29EPCOVM1\\shared\\MSIDemo.msi",
+                            "arguments": {}
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -1,9 +1,9 @@
 param (
-    [string]$customerName
+    [string]$customerName='CustomerA'
 )
 
 # Load JSON file
-$jsonFilePath = "..\config\config.json"
+$jsonFilePath = "..\config\config-test.json"
 $jsonContent = Get-Content $jsonFilePath -Raw
 $data = ConvertFrom-Json $jsonContent
 
@@ -35,26 +35,29 @@ foreach ($vm in $virtualMachines) {
     # Run the Install-MSIs function in parallel for each VM
     $jobs += Start-Job -ScriptBlock {
         param ([string]$ipAddress, [string]$versionToInstall, [array]$msis)
+        
         function Install-MSIs {
             param ([string]$ipAddress, [string]$version, [array]$msis)
-        
+            $remote_user="m.abhishek@sonata-software.com"
+            $remote_password="Gv@123456"
+
             foreach ($msi in $msis) {
                 $msiName = $msi.msi
                 $msiPath = $msi.msipath
                 $arguments = $msi.arguments
         
                 # Construct the MSI install command
-                $argumentString = "/filelocation:$msiPath"
+                $argumentString = "/filelocation:$msiPath /arguments:/qn%space%/norestart"
                 foreach ($key in $arguments.Keys) {
-                    $argumentString += " /$key='$($arguments[$key])'"
+                    $argumentString += "%space%/$key='$($arguments[$key])'"
                 }
-                $installCommand = "install-package.ps1 -version $versionToInstall -msiName $msiName -msiArguments $argumentString"
-                Invoke-Command -ComputerName $ipAddress -ScriptBlock {
-                   param (
-                        $installCommand
-                     )
-                    & $installCommand
-                } -ArgumentList $installCommand
+                $setLocation = "Set-Location -Path 'D:\CHOCO\new\test\scripts'"
+                Invoke-Expression $setLocation
+                $installCommand = ".\install-package.ps1 -version $version -msiName $msiName -msiArguments '$argumentString' -remote_host $ipAddress -remote_user $remote_user -remote_password $remote_password"
+                Write-Host "invoke $installCommand"
+                Write-Output "Installing in VM"
+                $output = Invoke-Expression -Command $installCommand
+                Write-Output $output
             }
         }
 
@@ -63,6 +66,7 @@ foreach ($vm in $virtualMachines) {
 }
 
 # Wait for all jobs to complete
+#Start-Sleep -Seconds 10
 $jobs | ForEach-Object { $_ | Wait-Job | Receive-Job }
 Write-Output "Installation process completed for customer $customerName."
 

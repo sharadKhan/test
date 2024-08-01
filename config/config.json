@@ -2,17 +2,17 @@
     "customers": [
         {
             "customer": "CustomerA",
-            "versionToInstall": "1.0.0",
+            "versionToInstall": "2.0.0",
             "virtualMachines": [
                 {
-                    "ipAddress": "VM1",
+                    "ipAddress": "172.29.74.154",
                     "msis": [
                         {
-                            "msi": "MSI1",
-                            "msipath": "..\\builds\\MSIDemo.msi",
+                            "msi": "MSIDemo",
+                            "msipath": "\\BG4PHS29EPCOVM1\\shared\\MSIDemo.msi",
                             "arguments": {
-                                "argument1": "/quite",
-                                "argument2": "/norestart"
+                                "US_LOCAL_SERVER": "sonatashrdss",
+                                "US_LOCAL_AUTHENTICATION": "1"
                             }
                         },
                         {
