@@ -34,7 +34,7 @@ function Install-NewVersion {
     
     $scriptBlock = {
         param ($packageName, $version, $packageParamters)
-        choco install $packageName --version $version --package-parameters=`"`'$packageParamters`'`" --source `${{ vars.JFROG_ARTIFACTORY_URL }}/api/nuget/{{ vars.JFROG_REPOSITORY }}` --user=`${{ vars.JFROG_USERID }}` --password=`${{ secrets.JFROG_TOKEN }}` -y --force
+        choco install $packageName --version $version --package-parameters=`"`'$packageParamters`'`" --source "https://sonatapoc.jfrog.io/artifactory/api/nuget/chocopackages-nuget/" --user="sharad1" --password="Sharad@123" -y --force
     }
      Invoke-Command -ComputerName $remote_host -Credential $credential -ScriptBlock $scriptBlock -ArgumentList $packageName , $version, $packageParamters, $jFrogUrl, $jFrogUserName, $securejFrogPassword
      return $true
