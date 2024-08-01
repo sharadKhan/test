@@ -9,7 +9,7 @@ on:
         
 jobs:
   read-json:
-    runs-on: windows-latest
+    runs-on: self-hosted
     steps:
       - name: Set Path
         run: Set-Location -Path "${{ github.workspace }}"
