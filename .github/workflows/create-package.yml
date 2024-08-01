@@ -18,6 +18,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Print root folder
+        run: echo "Root folder is $GITHUB_WORKSPACE"
+        
       - name: Setup Choco package
         run:  Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iwr https://community.chocolatey.org/install.ps1 -UseBasicParsing | iex
 
@@ -28,7 +31,7 @@ jobs:
           JF_ACCESS_TOKEN: ${{ secrets.JFROG_TOKEN }} 
 
       - name: Create package 
-        run: ../../scripts/create-package.ps1 -version "${{ github.event.inputs.VERSION }}" -msiname "${{ github.event.inputs.MSI_NAME }}"  -packagepath "."  -msipath "${{ github.event.inputs.MSI_PATH }}"
+        run: $GITHUB_WORKSPACE/scripts/create-package.ps1 -version "${{ github.event.inputs.VERSION }}" -msiname "${{ github.event.inputs.MSI_NAME }}"  -packagepath "."  -msipath "${{ github.event.inputs.MSI_PATH }}"
         shell: pwsh
 
       - name: Upload package
