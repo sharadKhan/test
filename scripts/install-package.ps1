@@ -4,12 +4,13 @@ param (
     [string]$msiArguments,
     [string]$remote_host,
     [string]$remote_user,
-    [string]$remote_password
-
+    [securestring]$remote_password,
+    [string]$currentPath
 )
+Set-Location -Path $currentPath
 
-$securePassword = ConvertTo-SecureString $remote_password -AsPlainText -Force
-$credential = New-Object System.Management.Automation.PSCredential ($remote_user, $securePassword)
+$securejFrogPassword = ConvertTo-SecureString -String $remotePassword -AsPlainText -Force
+
 
 $logDir = "logs"
 $logFile = "$logDir/install-package-log.log"
@@ -23,6 +24,51 @@ function Install-Choco {
         Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'));
     }
 }
+
+# Function to install a new version of a package
+function Install-NewVersion {
+    param (
+        [string]$packageName,
+        [string]$version,
+        [string]$packageParamters,
+        [string]$remote_host,
+        [string]$remote_user,
+        [securestring]$remote_password
+    )
+
+    $securePassword = ConvertTo-SecureString $remote_password -AsPlainText -Force
+    $credential = New-Object System.Management.Automation.PSCredential ($remote_user, $securePassword)
+    
+    $scriptBlock = {
+        param (
+        $packageName,
+        $version,
+        $packageParamters,
+        $jFrogUrl,
+        $jFrogUserName,
+        [securestring]$jFrogPassword
+
+        )
+
+        $command = "choco install $packageName --version $version --package-parameters=`"`'$packageParamters`'`" --source '$jFrogUrl' -y --force --user='$jFrogUserName' --password='$jFrogPassword'" 
+        Write-Host "inside scriptblock $command"  
+        choco install $packageName --version $version --package-parameters=`"`'$packageParamters`'`" --source '$jFrogUrl' -y --force --user='$jFrogUserName' --password='$jFrogPassword'
+        # $command
+        Write-Host "Running outside command"
+    }
+    # Write-Host "Invoke-Command -ComputerName $remote_host -Credential $credential -ScriptBlock $scriptBlock -ArgumentList $packageName , $version, $packageParamters, $jFrogUrl, $jFrogUserName, $jFrogPassword"
+    Invoke-Command -ComputerName $remote_host -Credential $credential -ScriptBlock $scriptBlock -ArgumentList $packageName , $version, $packageParamters, $jFrogUrl, $jFrogUserName, $securejFrogPassword
+
+    # $installCommand = "choco install $packageName --version $version --package-parameters=`"`'$packageParamters`'`" --source=`${{ vars.JFROG_ARTIFACTORY_URL }}/api/nuget/{{ vars.JFROG_REPOSITORY }}` --user=`${{ vars.JFROG_USERID }}` --password=`${{ secrets.JFROG_TOKEN }}` -y --force"
+    return $true
+
+}
+
+
+
+
+
+
 
 # Function to get the installed version of a package
 function Get-PreviousVersion {
@@ -53,32 +99,7 @@ function Write-Log {
     Write-Output $timestampedMessage
 }
 
-# Function to install a new version of a package
-function Install-NewVersion {
-    param (
-        [string]$packageName,
-        [string]$version,
-        [string]$packageParamters,
-        [string]$remote_host,
-        [string]$credential
-    )
 
-    try {
-        Write-Host "choco install $packageName --version $version --package-parameters=`"`'$packageParamters`'`" --source 'https://sonatapoc.jfrog.io/artifactory/api/nuget/chocopackages-nuget/' -y --force --user='sharad1' --password='Sharad@123'"
-        Invoke-Command -ComputerName $remote_host -Credential $credential -ScriptBlock {
-            Write-Host "inside install command $remote_host"
-            choco install $packageName --version $version --package-parameters=`"`'$packageParamters`'`" --source 'https://sonatapoc.jfrog.io/artifactory/api/nuget/chocopackages-nuget/' -y --force --user='sharad1' --password='Sharad@123'
-            Write-Host "outside install command"
-        }
-
-        # $installCommand = "choco install $packageName --version $version --package-parameters=`"`'$packageParamters`'`" --source=`${{ vars.JFROG_ARTIFACTORY_URL }}/api/nuget/{{ vars.JFROG_REPOSITORY }}` --user=`${{ vars.JFROG_USERID }}` --password=`${{ secrets.JFROG_TOKEN }}` -y --force"
-        Write-Host "Running install command"
-        return $true
-    } catch {
-        Write-Error "Exception: $_"
-        return $false
-    }
-}
 
 # Function to rollback to the previous version
 
@@ -98,7 +119,7 @@ Install-Choco
 $previousVersion = Get-PreviousVersion -packageName $msiName
 Write-Output "Previous version of $msiName : $previousVersion"
 
-if (Install-NewVersion -packageName $msiName -version $version -packageParamters $msiArgument -remote_host $remote_host -credential $credential) {
+if (Install-NewVersion -packageName $msiName -version $version -packageParamters $msiArguments -remote_host $remote_host -remote_user $remote_user -remote_password $remote_password) {
     Write-Output "$msiName version $version installed successfully."
 } else {
     # Add rollback

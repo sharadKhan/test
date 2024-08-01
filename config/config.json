@@ -2,7 +2,7 @@
     "customers": [
         {
             "customer": "CustomerA",
-            "versionToInstall": "2.0.0",
+            "versionToInstall": "3.0.0",
             "virtualMachines": [
                 {
                     "ipAddress": "172.29.74.154",

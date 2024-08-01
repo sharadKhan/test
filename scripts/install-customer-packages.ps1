@@ -1,7 +1,6 @@
 param (
     [string]$customerName='CustomerA'
 )
-
 # Load JSON file
 $jsonFilePath = "..\config\config-test.json"
 $jsonContent = Get-Content $jsonFilePath -Raw
@@ -28,19 +27,22 @@ if ($virtualMachines.Count -eq 0) {
 
 $jobs = @()
 
+$installScriptFilePath = (Resolve-Path .\install-package.ps1).Path
+$currentPath = Get-Location
+Write-Host "envpath $currentPath"
+
 foreach ($vm in $virtualMachines) {
     $ipAddress = $vm.ipAddress
     $msis = $vm.msis
 
     # Run the Install-MSIs function in parallel for each VM
     $jobs += Start-Job -ScriptBlock {
-        param ([string]$ipAddress, [string]$versionToInstall, [array]$msis)
+        param ([string]$ipAddress, [string]$versionToInstall, [array]$msis , [string]$scriptFilePath, [string]$remote_user, [securestring]$remote_password, [string]$currentPath)
         
         function Install-MSIs {
-            param ([string]$ipAddress, [string]$version, [array]$msis)
-            $remote_user="m.abhishek@sonata-software.com"
-            $remote_password="Gv@123456"
-
+            param ([string]$ipAddress, [string]$version, [array]$msis, [string]$remote_user, [securestring]$remote_password, [string]$currentPath)
+            
+            $password = ConvertFrom-SecureString -String $remote_password -AsPlainText -Force
             foreach ($msi in $msis) {
                 $msiName = $msi.msi
                 $msiPath = $msi.msipath
@@ -51,22 +53,20 @@ foreach ($vm in $virtualMachines) {
                 foreach ($key in $arguments.Keys) {
                     $argumentString += "%space%/$key='$($arguments[$key])'"
                 }
-                $setLocation = "Set-Location -Path 'D:\CHOCO\new\test\scripts'"
-                Invoke-Expression $setLocation
-                $installCommand = ".\install-package.ps1 -version $version -msiName $msiName -msiArguments '$argumentString' -remote_host $ipAddress -remote_user $remote_user -remote_password $remote_password"
+                # $setLocation = "Set-Location -Path 'D:\CHOCO\new\test\scripts'"
+                # Invoke-Expression $setLocation
+                $installCommand = "$scriptFilePath -version $version -msiName $msiName -msiArguments ""$argumentString"" -remote_host $ipAddress -remote_user $remote_user -remote_password {{}} -currentPath $currentPath"
                 Write-Host "invoke $installCommand"
                 Write-Output "Installing in VM"
-                $output = Invoke-Expression -Command $installCommand
-                Write-Output $output
+                Invoke-Expression $installCommand
             }
         }
 
-        Install-MSIs -ipAddress $ipAddress -version $versionToInstall -msis $msis
-    } -ArgumentList $ipAddress, $versionToInstall, $msis
+        Install-MSIs -ipAddress $ipAddress -version $versionToInstall -msis $msis -remote_user $remote_user -remote_password $remote_password -currentPath $currentPath
+    } -ArgumentList $ipAddress, $versionToInstall, $msis, $installScriptFilePath, $remoteUser, $secureRemotePassword, $currentPath
 }
 
 # Wait for all jobs to complete
-#Start-Sleep -Seconds 10
 $jobs | ForEach-Object { $_ | Wait-Job | Receive-Job }
 Write-Output "Installation process completed for customer $customerName."
 
