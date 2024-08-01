@@ -49,7 +49,6 @@ foreach ($vm in $virtualMachines) {
                 }
                 &  $currentPath/scripts/install-package.ps1 -version $version -msiName $msiName -msiArguments ""$argumentString"" -remote_host $ipAddress -currentPath $currentPath
                 Write-Output "Installing in VM"
-                #Invoke-Expression $installCommand
             }
         }
 
