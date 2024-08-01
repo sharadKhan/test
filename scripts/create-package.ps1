@@ -50,7 +50,7 @@ $installScriptContent = @"
 Write-Host `$pp['filelocation']
 Write-Host `$pp['arguments']
 `$fileLocation = `$pp['filelocation']
-`$finalargs = `$pp['arguments'] -replace '&space;', ' '
+`$finalargs = `$pp['arguments'] -replace '%space%', ' '
 Write-Host "final arguments `$finalargs"
 
 `$packageArgs = @{
