@@ -6,7 +6,7 @@ param (
     [string]$currentPath
 )
 Set-Location -Path $currentPath
-
+Write-Host "MSI $msiName"
 $logDir = "logs"
 $logFile = "$logDir/install-package-log.log"
 
@@ -22,12 +22,7 @@ function Install-Choco {
 
 # Function to install a new version of a package
 function Install-NewVersion {
-    param (
-        [string]$packageName,
-        [string]$version,
-        [string]$packageParamters,
-        [string]$remote_host
-    )
+    param ([string]$packageName, [string]$version, [string]$packageParamters, [string]$remote_host)
 
     $securePassword = ConvertTo-SecureString "Gv@123456" -AsPlainText -Force
     $credential = New-Object System.Management.Automation.PSCredential ("m.abhishek@sonata-software.com", $securePassword)
@@ -37,8 +32,8 @@ function Install-NewVersion {
         Write-Host 'choco install $packageName --version $version --package-parameters=`"`''$packageParamters`''`" --source "https://sonatapoc.jfrog.io/artifactory/api/nuget/chocopackages-nuget/" --user="sharad1" --password="Sharad@123" -y --force'
         choco install $packageName --version $version --package-parameters=`"`'$packageParamters`'`" --source "https://sonatapoc.jfrog.io/artifactory/api/nuget/chocopackages-nuget/" --user="sharad1" --password="Sharad@123" -y --force
     }
-     Invoke-Command -ComputerName $remote_host -Credential $credential -ScriptBlock $scriptBlock -ArgumentList $packageName , $version, $packageParamters, $jFrogUrl, $jFrogUserName, $securejFrogPassword
-     return $true
+    Invoke-Command -ComputerName $remote_host -Credential $credential -ScriptBlock $scriptBlock -ArgumentList $packageName , $version, $packageParamters, $jFrogUrl, $jFrogUserName, $securejFrogPassword
+    return $true
 }
 
 # Function to get the installed version of a package
@@ -90,7 +85,7 @@ Install-Choco
 $previousVersion = Get-PreviousVersion -packageName $msiName
 Write-Output "Previous version of $msiName : $previousVersion"
 
-if (Install-NewVersion -packageName $msiName -version $version -packageParamters $msiArguments -remote_host $remote_host -remote_user $remote_user -remote_password $remote_password) {
+if (Install-NewVersion -packageName $msiName -version $version -packageParamters $msiArguments -remote_host $remote_host) {
     Write-Output "$msiName version $version installed successfully."
 }
 else {

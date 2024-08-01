@@ -47,6 +47,7 @@ foreach ($vm in $virtualMachines) {
                 foreach ($key in $arguments.Keys) {
                     $argumentString += "%space%/$key='$($arguments[$key])'"
                 }
+                Write-Host "MSI $msiName"
                 &  $currentPath/scripts/install-package.ps1 -version $version -msiName $msiName -msiArguments ""$argumentString"" -remote_host $ipAddress -currentPath $currentPath
                 Write-Output "Installing in VM"
             }
