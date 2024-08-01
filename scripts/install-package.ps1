@@ -77,7 +77,6 @@ function Install-NewVersion {
 
 # Function to rollback to the previous version
 
-
 # Create log directory if it doesn't exist
 if (-not (Test-Path -Path $logDir)) {
     New-Item -ItemType Directory -Path $logDir
