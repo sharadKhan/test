@@ -29,7 +29,7 @@ jobs:
 
       - name: Create package 
         run: |
-         $scriptPath = ${{ github.workspace }}\scripts\create-package.ps1
+         $scriptPath = "${{ github.workspace }}\scripts\create-package.ps1"
          pwsh $scriptPath -version "${{ github.event.inputs.VERSION }}" -msiname "${{ github.event.inputs.MSI_NAME }}"  -packagepath "."  -msipath "${{ github.event.inputs.MSI_PATH }}"
          shell: pwsh
  
