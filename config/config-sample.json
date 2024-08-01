@@ -1,0 +1,71 @@
+{
+    "customers": [
+        {
+            "customer": "CustomerA",
+            "versionToInstall": "3.0.0",
+            "virtualMachines": [
+                {
+                    "ipAddress": "172.29.74.154",
+                    "msis": [
+                        {
+                            "msi": "MSIDemo",
+                            "msipath": "\\BG4PHS29EPCOVM1\\shared\\MSIDemo.msi",
+                            "arguments": {
+                                "US_LOCAL_SERVER": "sonatashrdss",
+                                "US_LOCAL_AUTHENTICATION": "1"
+                            }
+                        },
+                        {
+                            "msi": "MSI2",
+                            "msipath": "..\\builds\\MSIDemo.msi",
+                            "arguments": {
+                                "argument1": "/quite",
+                                "argument2": "/norestart"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "ipAddress": "VM2",
+                    "msis": [
+                        {
+                            "msi": "MSI3",
+                            "msipath": "..\\builds\\MSIDemo.msi",
+                            "arguments": {
+                                "argument1": "/quite",
+                                "argument2": "/norestart"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "customer": "CustomerB",
+            "versionToInstall": "1.0.0",
+            "virtualMachines": [
+                {
+                    "ipAddress": "VM3",
+                    "msis": [
+                        {
+                            "msi": "MSI4",
+                            "msipath": "..\\builds\\MSIDemo.msi",
+                            "arguments": {
+                                "argument1": "/quite",
+                                "argument2": "/norestart"
+                            }
+                        },
+                        {
+                            "msi": "MSI5",
+                            "msipath": "..\\builds\\MSIDemo.msi",
+                            "arguments": {
+                                "argument1": "/quite",
+                                "argument2": "/norestart"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

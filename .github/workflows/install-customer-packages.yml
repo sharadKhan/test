@@ -11,7 +11,10 @@ jobs:
   read-json:
     runs-on: windows-latest
     steps:
-      - name: Deploy package on VMs 
+      - name: Set Path
+        run: Set-Location -Path "${{ github.workspace }}"
+
+      - name: Deploy package on VMs
         run: ./scripts/install-customer-packages.ps1 -customerName "${{ github.event.inputs.CUSTOMER_NAME }}"
         shell: pwsh
 
