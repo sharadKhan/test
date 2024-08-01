@@ -6,7 +6,7 @@ param (
     [string]$currentPath
 )
 Set-Location -Path $currentPath
-Write-Host "MSI $msiName"
+Write-Host "MSI $msiArguments"
 $logDir = "logs"
 $logFile = "$logDir/install-package-log.log"
 
