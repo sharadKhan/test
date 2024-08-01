@@ -24,15 +24,15 @@ function Install-Choco {
 function Install-NewVersion {
     param ([string]$packageName, [string]$version, [string]$packageParameters, [string]$remote_host)
 
-    $securePassword = ConvertTo-SecureString "Gv@123456" -AsPlainText -Force
-    $credential = New-Object System.Management.Automation.PSCredential ("m.abhishek@sonata-software.com", $securePassword)
+    $securePassword = ConvertTo-SecureString "July@123" -AsPlainText -Force
+    $credential = New-Object System.Management.Automation.PSCredential ("sharad.k@sonata-software.com", $securePassword)
     
     $scriptBlock = {
         param ($packageName, $version, $packageParameters)
         $command = "choco install $packageName --version $version --package-parameters=`"`'$packageParameters`'`" --source ""https://sonatapoc.jfrog.io/artifactory/api/nuget/chocopackages-nuget/"" --user=""sharad1"" --password=""Sharad@123"" -y --force "
         Write-Host "inside scriptblock $command"
         $output = Invoke-Expression -Command $command
-        Write-Log "$output"
+        Write-Output "$output"
     }
     Invoke-Command -ComputerName $remote_host -Credential $credential -ScriptBlock $scriptBlock -ArgumentList $packageName, $version, $packageParameters
     return $true
