@@ -32,7 +32,7 @@ function Install-NewVersion {
         $command = "choco install $packageName --version $version --package-parameters=`"`'$packageParameters`'`" --source ""https://sonatapoc.jfrog.io/artifactory/api/nuget/chocopackages-nuget/"" --user=""sharad1"" --password=""Sharad@123"" -y --force "
         Write-Host "inside scriptblock $command"
         $output = Invoke-Expression -Command $command
-        Write-Output "$output"
+        Write-Log "$output"
     }
     Invoke-Command -ComputerName $remote_host -Credential $credential -ScriptBlock $scriptBlock -ArgumentList $packageName, $version, $packageParameters
     return $true
