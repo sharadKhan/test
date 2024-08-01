@@ -24,7 +24,6 @@ if ($virtualMachines.Count -eq 0) {
 
 $jobs = @()
 
-$installScriptFilePath = (Resolve-Path .\install-package.ps1).Path
 $currentPath = Get-Location
 
 foreach ($vm in $virtualMachines) {
@@ -48,9 +47,9 @@ foreach ($vm in $virtualMachines) {
                 foreach ($key in $arguments.Keys) {
                     $argumentString += "%space%/$key='$($arguments[$key])'"
                 }
-                $installCommand = "$scriptFilePath -version $version -msiName $msiName -msiArguments ""$argumentString"" -remote_host $ipAddress -currentPath $currentPath"
+                & ./scripts/install-package.ps1 -version $version -msiName $msiName -msiArguments ""$argumentString"" -remote_host $ipAddress -currentPath $currentPath
                 Write-Output "Installing in VM"
-                Invoke-Expression $installCommand
+                #Invoke-Expression $installCommand
             }
         }
 
