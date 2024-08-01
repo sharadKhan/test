@@ -24,7 +24,7 @@ function Install-Choco {
 function Install-NewVersion {
     param ([string]$packageName, [string]$version, [string]$packageParameters, [string]$remote_host)
 
-    $securePassword = ConvertTo-SecureString "July@123" -AsPlainText -Force
+    $securePassword = ConvertTo-SecureString "July2024@123" -AsPlainText -Force
     $credential = New-Object System.Management.Automation.PSCredential ("sharad.k@sonata-software.com", $securePassword)
     
     $scriptBlock = {
