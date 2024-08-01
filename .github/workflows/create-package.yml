@@ -28,7 +28,7 @@ jobs:
           JF_ACCESS_TOKEN: ${{ secrets.JFROG_TOKEN }} 
 
       - name: Create package 
-        run: ./scripts/create-package.ps1 -version "${{ github.event.inputs.VERSION }}" -msiname "${{ github.event.inputs.MSI_NAME }}"  -packagepath "."  -msipath "${{ github.event.inputs.MSI_PATH }}"
+        run: ../../scripts/create-package.ps1 -version "${{ github.event.inputs.VERSION }}" -msiname "${{ github.event.inputs.MSI_NAME }}"  -packagepath "."  -msipath "${{ github.event.inputs.MSI_PATH }}"
         shell: pwsh
 
       - name: Upload package
