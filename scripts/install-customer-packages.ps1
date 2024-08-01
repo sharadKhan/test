@@ -1,7 +1,7 @@
 param ([string]$customerName)
 
 # Load JSON file
-$jsonFilePath = "..\config\config.json"
+$jsonFilePath = ".\config\config.json"
 $jsonContent = Get-Content $jsonFilePath -Raw
 $data = ConvertFrom-Json $jsonContent
 
