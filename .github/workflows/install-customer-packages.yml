@@ -11,6 +11,9 @@ jobs:
   read-json:
     runs-on: self-hosted
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
       - name: Set Path
         run: Set-Location -Path "${{ github.workspace }}"
 
