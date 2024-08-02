@@ -18,7 +18,7 @@ const data = {
 };
 
 // Add a new document
-firestore.collection('orders').doc('order1').set(data)
+firestore.collection('order').doc('order1').set(data)
   .then(() => {
     console.log('Document successfully written to Firestore.');
   })
