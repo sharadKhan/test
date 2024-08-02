@@ -1,27 +1,31 @@
+
+
 const { Firestore } = require('@google-cloud/firestore');
 
-
-// Load the service account key JSON file
 const keyFilePath = process.env.GCP_KEY;
 const serviceAccount = JSON.parse(keyFilePath);
 
-// Initialize Firestore client
+
+// Initialize Firestore
 const firestore = new Firestore({
   projectId: process.env.GCP_PROJECT,
-  credentials: serviceAccount,
+  keyFilename: serviceAccount,
 });
 
-// Data to be saved
-const data = {
-  name: 'John Doe',
-  email: 'john.doe@example.com',
-};
+async function addDocument() {
+  try {
+    const docRef = firestore.collection('order').doc('order2');
+    const data = {
+      name: 'John Doe',
+      age: 30,
+      email: 'john.doe@example.com',
+    };
 
-// Add a new document
-firestore.collection('order').doc('order1').set(data)
-  .then(() => {
-    console.log('Document successfully written to Firestore.');
-  })
-  .catch(error => {
+    await docRef.set(data);
+    console.log('Document successfully written!');
+  } catch (error) {
     console.error('Error writing document: ', error);
-  });
+  }
+}
+
+addDocument();
