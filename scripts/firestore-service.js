@@ -1,6 +1,9 @@
 const { Firestore } = require('@google-cloud/firestore');
 
-const serviceAccount = JSON.parse($env.GCP_KEY);
+
+// Load the service account key JSON file
+const keyFilePath = process.env.GCP_KEY;
+const serviceAccount = JSON.parse(keyFilePath);
 
 // Initialize Firestore client
 const firestore = new Firestore({
