@@ -5,7 +5,7 @@
             "versionToInstall": "3.0.0",
             "virtualMachines": [
                 {
-                    "ipAddress": "172.29.74.24",
+                    "ipAddress": "172.29.74.27",
                     "msis": [
                         {
                             "msi": "MSIDemo",
