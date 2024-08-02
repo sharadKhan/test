@@ -23,10 +23,18 @@ jobs:
       with:
         credentials_json: '${{ secrets.GCPKEY }}'
 
-    - name: Run PowerShell script
-      shell: pwsh
-      run: .\scripts\firestore-service.ps1
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install dependencies
+      run: npm install @google-cloud/firestore
+
+    - name: Run script
+      run: node  .\scripts\firestore-service.js
       env:
         GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCPKEY }}
         GITHUB_WORKSPACE: ${{ github.workspace }}
         GCP_PROJECT: ${{ secrets.GCPPROJECT }}
+        GCP_KEY: '${{ secrets.GCPKEY }}'
