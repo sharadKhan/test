@@ -3,13 +3,13 @@ param (
     [string]$msiName,
     [string]$msiArguments,
     [string]$remote_host,
-    [string]$currentPath
+    [string]$workingDirectory
 )
-Set-Location -Path $currentPath
+Set-Location -Path $workingDirectory
 $logDir = "logs"
 $logFile = "$logDir/install-package-log.log"
 
-# Function to install Chocolatey if it's not already installed
+# Function to install Chocolatey if it's not already installed.
 function Install-Choco {
     if (-not (Get-Command choco -ErrorAction SilentlyContinue)) {
         Write-Output "Installing Chocolatey..."
@@ -19,7 +19,7 @@ function Install-Choco {
     }
 }
 
-# Function to install a new version of a package
+# Function to install a new version of a package.
 function Install-NewVersion {
     param ([string]$packageName, [string]$version, [string]$packageParameters, [string]$remote_host)
 
@@ -29,18 +29,16 @@ function Install-NewVersion {
 
     $scriptBlock = {
         param ($packageName, $version, $packageParameters, $jFrogUrl, $jFrogRepository, $jFrogUserId, $jFrogToken)
-        Write-Host "$packageName $version $packageParameters $env:JFROG_ARTIFACTORY_URL $env:JFROG_REPOSITORY $env:JFROG_USERID $env:JFROG_TOKEN"
-        Write-Host "$jFrogUrl,  $jFrogRepository, $jFrogUserId, $jFrogToken"
         $chocoInstallOutput = choco install $packageName --version $version --package-parameters=`"`'$packageParameters`'`" --source "$jFrogUrl/artifactory/api/nuget/$jFrogRepository/" --user=" $jFrogUserId" --password="$jFrogToken" -y --force
         return $chocoInstallOutput
     }
     $result = Invoke-Command -ComputerName $remote_host -Credential $credential -ScriptBlock $scriptBlock -ArgumentList $packageName, $version, $packageParameters, $env:JFROG_ARTIFACTORY_URL, $env:JFROG_REPOSITORY, $env:JFROG_USERID, $env:JFROG_TOKEN
     Write-Host "Remote command result:"
-    Write-Output $result
+    Write-Host $result
     return $true
 }
 
-# Function to get the installed version of a package
+# Function to get the installed version of a package.
 function Get-PreviousVersion {
     param (
         [string]$packageName
@@ -54,12 +52,12 @@ function Get-PreviousVersion {
     return $null
 }
 
-# Function to get the current timestamp
+# Function to get the current timestamp.
 function Get-Timestamp {
     return (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
 }
 
-# Function to write output with timestamp to the log file
+# Function to write output with timestamp to the log file.
 function Write-Log {
     param (
         [string]$message
@@ -69,19 +67,18 @@ function Write-Log {
     Write-Output $timestampedMessage
 }
 
-# Create log directory if it doesn't exist
+# Create log directory if it doesn't exist.
 if (-not (Test-Path -Path $logDir)) {
     New-Item -ItemType Directory -Path $logDir
 }
 
-# Create log file if it doesn't exist
+# Create log file if it doesn't exist.
 if (-not (Test-Path -Path $logFile)) {
     New-Item -ItemType File -Path $logFile
 }
 
-# Main script
+# Main script.
 Install-Choco
-
 
 if (Install-NewVersion -packageName $msiName -version $version -packageParameters $msiArguments -remote_host $remote_host) {
     Write-Output "$msiName version $version installed successfully."
@@ -89,6 +86,3 @@ if (Install-NewVersion -packageName $msiName -version $version -packageParameter
 else {
     # Add rollback
 }
-
-# sample to run the script with arguments
-# .\install-package.ps1 -version '2.0.0' -msiName 'MSIDemo' -jfrogArtifactoryUrl 'https://sonatapoc.jfrog.io/artifactory/api/nuget/chocopackages-nuget/' -jfrogArtifactoryToken 'Sharad@123' -jfrogArtifactoryUserId 'sharad1'
