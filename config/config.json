@@ -5,11 +5,11 @@
             "versionToInstall": "3.0.0",
             "virtualMachines": [
                 {
-                    "ipAddress": "172.29.74.24",
+                    "ipAddress": "172.29.74.154",
                     "msis": [
                         {
                             "msi": "MSIDemo",
-                            "msipath": "\\\\BG4PHS29EPCOVM1\\shared\\MSIDemo.msi",
+                            "msipath": "https://sonatachatgpt.blob.core.windows.net/msi/MSIDemo.msi?sv=2021-10-04&st=2024-08-02T02%3A07%3A00Z&se=2024-08-10T02%3A07%3A00Z&sr=b&sp=r&sig=7nZ6j6QEUuCBVN6PosL6AJdKuZL%2Bbv%2FGxYP1ri7lQ9A%3D",
                             "arguments": {}
                         }
                     ]

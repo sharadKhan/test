@@ -6,7 +6,6 @@ param (
     [string]$currentPath
 )
 Set-Location -Path $currentPath
-Write-Host "MSI $msiArguments"
 $logDir = "logs"
 $logFile = "$logDir/install-package-log.log"
 
@@ -24,18 +23,14 @@ function Install-Choco {
 function Install-NewVersion {
     param ([string]$packageName, [string]$version, [string]$packageParameters, [string]$remote_host)
 
-    $securePassword = ConvertTo-SecureString "July2024@123" -AsPlainText -Force
-    $credential = New-Object System.Management.Automation.PSCredential ("sharad.k@sonata-software.com", $securePassword)
+    $securePassword = ConvertTo-SecureString $env:ADMIN_PASSWORD -AsPlainText -Force
+    $credential = New-Object System.Management.Automation.PSCredential ($env:ADMIN_USER, $securePassword)
 
-    Write-Host "$env:JFROG_USERID   $env:JFROG_REPOSITORY $env:JFROG_TOKEN $env:ADMIN_USER $env:ADMIN_PASSWORD"
     $scriptBlock = {
         param ($packageName, $version, $packageParameters)
-        $command = "choco install $packageName --version $version --package-parameters=`"`'$packageParameters`'`" --source ""https://sonatapoc.jfrog.io/artifactory/api/nuget/chocopackages-nuget/"" --user=""sharad1"" --password=""Sharad@123"" -y --force "
-        Write-Host "inside scriptblock $command"
-        $output = Invoke-Expression -Command $command
-        Write-Output "$output"
+        choco install $packageName --version $version --package-parameters=`"`'$packageParameters`'`" --source "$env:JFROG_ARTIFACTORY_URL/api/nuget/$env:JFROG_REPOSITORY/" --user="$env:JFROG_USERID" --password="$env:JFROG_TOKEN" -y --force
     }
-    #Invoke-Command -ComputerName $remote_host -Credential $credential -ScriptBlock $scriptBlock -ArgumentList $packageName, $version, $packageParameters
+    Invoke-Command -ComputerName $remote_host -Credential $credential -ScriptBlock $scriptBlock -ArgumentList $packageName, $version, $packageParameters
     return $true
 }
 

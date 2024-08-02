@@ -22,6 +22,7 @@ jobs:
           & ./scripts/install-customer-packages.ps1 -customerName "${{ github.event.inputs.CUSTOMER_NAME }}"
         env:
           JFROG_REPOSITORY: ${{ vars.JFROG_REPOSITORY }}
+          JFROG_ARTIFACTORY_URL: ${{ vars.JFROG_ARTIFACTORY_URL }}
           JFROG_USERID: ${{ vars.JFROG_USERID }}
           JFROG_TOKEN: ${{ secrets.JFROG_TOKEN }}
           ADMIN_USER: ${{ vars.ADMIN_USER }}
