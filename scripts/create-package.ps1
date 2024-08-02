@@ -7,7 +7,7 @@ param (
     [string]$msiPath
 )
 
-$currentPath = Get-Location
+$workingDirectory = Get-Location
 
 # Remove space as there should not be any spaces for .nuspec file.
 $msiName = $msiName -replace ' ', ''
@@ -79,10 +79,8 @@ Install-ChocolateyPackage @packageArgs
 "@
 Set-Content -Path $installScriptPath -Value $installScriptContent
 
-# Pack the package
+# Create .nupkg file.
 choco pack $nuspecPath
 
-Set-Location -Path $currentPath
+Set-Location -Path $workingDirectory
 Write-Host "Package processed successfully: $msiName"
-
-
