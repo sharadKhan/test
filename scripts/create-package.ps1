@@ -1,3 +1,6 @@
+# Dot-source the helper script
+. .\scripts\helper.ps1
+
 param (
     [string]$version,
     [string]$msiName,
@@ -6,39 +9,36 @@ param (
 
 $currentPath = Get-Location
 
-# Remove space as there should not be any spaces got .nuspec file
+# Remove space as there should not be any spaces for .nuspec file.
 $msiName = $msiName -replace ' ', ''
 
-# Get checksum
+# Get checksum.
 $checksum = Get-FileHash -Path $msiPath -Algorithm SHA256 | Select-Object -ExpandProperty Hash
 
-# For local testing use $packagePath = 'D:\CHOCO\packs'
-# $packagePath = 'D:\CHOCO\packs'
+# Assign path for choco packages.
 $packagePath = './packs'
 
 if (-Not (Test-Path -Path $packagePath)) {
-    # Create the path if it doesn't exist
+    # Create the path if it doesn't exist.
     New-Item -Path $packagePath -ItemType Directory -Force
     Write-Output "Created directory: $packagePath"
 }
-# Import the helper script
-. .\scripts\helper.ps1
 
-# Set paths
+# Set paths.
 Set-Location -Path $packagePath
 $packageDir = Join-Path -Path (Get-Location) -ChildPath $msiName
 $nuspecPath = Join-Path -Path $packageDir -ChildPath "$msiName.nuspec"
 $toolsDir = Join-Path -Path $packageDir -ChildPath "tools"
 $installScriptPath = Join-Path -Path $packageDir -ChildPath "tools\chocolateyinstall.ps1"
 
-# Create a new Chocolatey package
+# Create a new Chocolatey package.
 choco new $msiName --version $version
 
-# Remove the files which are not required
+# Remove the files which are not required.
 Remove-FilesExcept -DirectoryPath $packageDir -FilePathToKeep $nuspecPath
 Remove-FilesExcept -DirectoryPath $toolsDir -FilePathToKeep $installScriptPath
 
-# Edit .nuspec file
+# Edit .nuspec file.
 $xml = [xml](Get-Content $nuspecPath)
 $xml.package.metadata.id = $msiName
 $xml.package.metadata.title = $msiName
@@ -54,15 +54,13 @@ if ($authorsNode) {
 }
 $xml.Save($nuspecPath)
 
-# Edit chocolateyinstall.ps1 file
+# Edit chocolateyinstall.ps1 file.
 $installScriptContent = @"
-`$pp = Get-PackageParameters
-`$fileLocation = `$pp['filelocation']
+`$packageParameters = Get-PackageParameters
+`$fileLocation = `$packageParameters['filelocation']
 `$defaultArgs = "/quiet /norestart /l*v ``"`$(`$env:TEMP)\`$(`$env:chocolateyPackageName).`$(`$env:chocolateyPackageVersion).MsiInstall.log``""
-`$arguments = `$pp['arguments'] -replace '%space%', ' '
-`$finalargs = "`$defaultArgs `$arguments"
-
-Write-Host "final arguments `$finalargs"
+`$arguments = `$packageParameters['arguments'] -replace '%space%', ' '
+`$finalArgs = "`$defaultArgs `$arguments"
 
 `$packageArgs = @{
     packageName    = `$env:ChocolateyPackageName
@@ -72,7 +70,7 @@ Write-Host "final arguments `$finalargs"
     checksum64     = '$checksum'
     checksumType64 = 'sha256'
 
-    silentArgs     = `$finalargs
+    silentArgs     = `$finalArgs
     validExitCodes = @(0, 3010, 1641)
 }
 
@@ -83,8 +81,8 @@ Set-Content -Path $installScriptPath -Value $installScriptContent
 
 # Pack the package
 choco pack $nuspecPath
-Set-Location -Path $currentPath
-Write-Output "Package processed successfully: $msiName"
 
-# sample to run the script with arguments
-# .\create-package.ps1 -version '10.0.1' -msiName 'MSIDemo' -msiPath '..\builds\MSIDemo.msi'
+Set-Location -Path $currentPath
+Write-Host "Package processed successfully: $msiName"
+
+
