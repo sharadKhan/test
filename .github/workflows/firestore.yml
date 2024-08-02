@@ -23,14 +23,10 @@ jobs:
       with:
         credentials_json: '${{ secrets.GCPKEY }}'
 
-    - name: Install dependencies
-      shell: pwsh
-      run: |
-        Install-Module -Name Google.Cloud.Firestore.V1 -Scope CurrentUser -Force -SkipPublisherCheck
-
     - name: Run PowerShell script
       shell: pwsh
-      run: .\save_to_firestore.ps1
+      run: .\scripts\firestore_service.ps1
       env:
-        GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCPKEY }}
         GITHUB_WORKSPACE: ${{ github.workspace }}
+        GCP_PROJECT: ${{ secrets.GCPPROJECT }}
