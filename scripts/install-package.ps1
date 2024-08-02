@@ -28,10 +28,10 @@ function Install-NewVersion {
     $credential = New-Object System.Management.Automation.PSCredential ($env:ADMIN_USER, $securePassword)
 
     $scriptBlock = {
-        param ($packageName, $version, $packageParameters, $jFrogArtifactoryUrl, $jFrogRepository, $jFrogUserId, $jFrogToken)
+        param ($packageName, $version, $packageParameters, $jFrogUrl, $jFrogRepository, $jFrogUserId, $jFrogToken)
         Write-Host "$packageName $version $packageParameters $env:JFROG_ARTIFACTORY_URL $env:JFROG_REPOSITORY $env:JFROG_USERID $env:JFROG_TOKEN"
-        Write-Host "$jFrogArtifactoryUrl,  $jFrogRepository, $jFrogUserId, $jFrogToken"
-        choco install $packageName --version $version --package-parameters=`"`'$packageParameters`'`" --source "$jFrogArtifactoryUrl/artifactory/api/nuget/$jFrogRepository/" --user="sharad1" --password="Sharad@123" -y --force
+        Write-Host "$jFrogUrl,  $jFrogRepository, $jFrogUserId, $jFrogToken"
+        choco install $packageName --version $version --package-parameters=`"`'$packageParameters`'`" --source "$jFrogUrl/artifactory/api/nuget/$jFrogRepository/" --user=" $jFrogUserId" --password="$jFrogToken" -y --force
     }
     Invoke-Command -ComputerName $remote_host -Credential $credential -ScriptBlock $scriptBlock -ArgumentList $packageName, $version, $packageParameters, $env:JFROG_ARTIFACTORY_URL, $env:JFROG_REPOSITORY, $env:JFROG_USERID, $env:JFROG_TOKEN
     return $true
