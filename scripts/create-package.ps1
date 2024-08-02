@@ -13,8 +13,8 @@ $msiName = $msiName -replace ' ', ''
 $checksum = Get-FileHash -Path $msiPath -Algorithm SHA256 | Select-Object -ExpandProperty Hash
 
 # For local testing use $packagePath = 'D:\CHOCO\packs'
-$packagePath = 'D:\CHOCO\packs'
-# $packagePath = './packs'
+# $packagePath = 'D:\CHOCO\packs'
+$packagePath = './packs'
 
 if (-Not (Test-Path -Path $packagePath)) {
     # Create the path if it doesn't exist
@@ -22,7 +22,7 @@ if (-Not (Test-Path -Path $packagePath)) {
     Write-Output "Created directory: $packagePath"
 }
 # Import the helper script
-. .\helper.ps1
+. .\scripts\helper.ps1
 
 # Set paths
 Set-Location -Path $packagePath
