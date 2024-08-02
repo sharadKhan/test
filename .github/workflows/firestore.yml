@@ -23,10 +23,9 @@ jobs:
       with:
         credentials_json: '${{ secrets.GCPKEY }}'
 
-
     - name: Run PowerShell script
       shell: pwsh
-      run: .\firestore_service.ps1
+      run: .\scripts\firestore_service.ps1
       env:
         GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCPKEY }}
         GITHUB_WORKSPACE: ${{ github.workspace }}
