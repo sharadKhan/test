@@ -31,7 +31,7 @@ function Install-NewVersion {
         param ($packageName, $version, $packageParameters, $jFrogArtifactoryUrl, $jFrogRepository, $jFrogUserId, $jFrogToken)
         Write-Host "$packageName $version $packageParameters $env:JFROG_ARTIFACTORY_URL $env:JFROG_REPOSITORY $env:JFROG_USERID $env:JFROG_TOKEN"
         Write-Host "$jFrogArtifactoryUrl,  $jFrogRepository, $jFrogUserId, $jFrogToken"
-        choco install $packageName --version $version --package-parameters=`"`'$packageParameters`'`" --source "$jFrogArtifactoryUrl/api/nuget/$jFrogRepository/" --user="$jFrogUserId" --password="$jFrogToken" -y --force
+        choco install $packageName --version $version --package-parameters=`"`'$packageParameters`'`" --source "$jFrogArtifactoryUrl/artifactory/api/nuget/$jFrogRepository/" --user="$jFrogUserId" --password="$jFrogToken" -y --force
     }
     Invoke-Command -ComputerName $remote_host -Credential $credential -ScriptBlock $scriptBlock -ArgumentList $packageName, $version, $packageParameters, $env:JFROG_ARTIFACTORY_URL, $env:JFROG_REPOSITORY, $env:JFROG_USERID, $env:JFROG_TOKEN
     return $true
