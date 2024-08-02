@@ -60,12 +60,3 @@ foreach ($vm in $virtualMachines) {
 # Wait for all jobs to complete
 $jobs | ForEach-Object { $_ | Wait-Job | Receive-Job }
 Write-Output "Installation process completed for customer $customerName."
-
-
-# sample to run the script with arguments
-# .\install-customer-packages.ps1 -customerName 'CustomerA'
-#$startTime = Get-Date
-#Write-Output "[$startTime] Installing $msiName on $ipAddress with command: $installCommand"
-#Start-Sleep -Seconds 3
-#$endTime = Get-Date
-#Write-Output "[$endTime] Completed installation of $msiName on $ipAddress"

@@ -20,6 +20,12 @@ jobs:
       - name: Deploy package on VMs
         run: |
           & ./scripts/install-customer-packages.ps1 -customerName "${{ github.event.inputs.CUSTOMER_NAME }}"
+        env:
+          JFROG_REPOSITORY: ${{ vars.JFROG_REPOSITORY }}
+          JFROG_USERID: ${{ vars.JFROG_USERID }}
+          JFROG_TOKEN: ${{ secrets.JFROG_TOKEN }}
+          ADMIN_USER: ${{ vars.ADMIN_USER }}
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
 
 
            
