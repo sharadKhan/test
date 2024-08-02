@@ -30,6 +30,8 @@ $installScriptPath = Join-Path -Path $packageDir -ChildPath "tools\chocolateyins
 # Create a new Chocolatey package
 choco new $msiName --version $version
 
+#Remove the files which are not required
+
 $xml = [xml](Get-Content $nuspecPath)
 $xml.package.metadata.id = $msiName
 $xml.package.metadata.title = $msiName
@@ -47,10 +49,10 @@ $xml.Save($nuspecPath)
 
 $installScriptContent = @"
 `$pp = Get-PackageParameters
-Write-Host `$pp['filelocation']
-Write-Host `$pp['arguments']
 `$fileLocation = `$pp['filelocation']
+`$defaultArgs = ""/quiet /norestart /l*v `""$($env:TEMP)\$($env:chocolateyPackageName).$($env:chocolateyPackageVersion).MsiInstall.log`"""
 `$finalargs = `$pp['arguments'] -replace '%space%', ' '
+
 Write-Host "final arguments `$finalargs"
 
 `$packageArgs = @{
