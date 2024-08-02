@@ -1,0 +1,36 @@
+name: Save Document to Firestore
+on:
+  workflow_dispatch:
+
+jobs:
+  save-document:
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Google Cloud SDK
+      uses: google-github-actions/setup-gcloud@v1
+      with:
+        version: 'latest'
+        service_account_key: ${{ secrets.GCPKEY }}
+        export_default_credentials: true
+        
+    - name: Google Auth
+      id: auth
+      uses: 'google-github-actions/auth@v2'
+      with:
+        credentials_json: '${{ secrets.GCPKEY }}'
+
+    - name: Install dependencies
+      shell: pwsh
+      run: |
+        Install-Module -Name Google.Cloud.Firestore.V1 -Scope CurrentUser -Force -SkipPublisherCheck
+
+    - name: Run PowerShell script
+      shell: pwsh
+      run: .\save_to_firestore.ps1
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
+        GITHUB_WORKSPACE: ${{ github.workspace }}
