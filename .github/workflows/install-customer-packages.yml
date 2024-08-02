@@ -8,7 +8,7 @@ on:
           type: string
         
 jobs:
-  read-json:
+  install-customer-packages:
     runs-on: self-hosted
     steps:
       - name: Checkout repository
