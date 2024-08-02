@@ -4,7 +4,7 @@ on:
 
 jobs:
   save-document:
-    runs-on: self-hosted
+    runs-on: windows-latest
 
     steps:
     - name: Checkout code
