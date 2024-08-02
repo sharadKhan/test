@@ -7,7 +7,7 @@ const serviceAccount = JSON.parse(keyFilePath);
 
 // Initialize Firestore client
 const firestore = new Firestore({
-  projectId: $env.GCP_PROJECT,
+  projectId: process.env.GCP_PROJECT,
   credentials: serviceAccount,
 });
 
