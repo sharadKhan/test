@@ -9,7 +9,7 @@ const serviceAccount = JSON.parse(keyFilePath);
 // Initialize Firestore
 const firestore = new Firestore({
   projectId: process.env.GCP_PROJECT,
-  keyFilename: serviceAccount,
+  credentials: serviceAccount,
 });
 
 async function addDocument() {
