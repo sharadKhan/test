@@ -23,11 +23,13 @@ function Install-Choco {
 function Install-NewVersion {
     param ([string]$packageName, [string]$version, [string]$packageParameters, [string]$remote_host)
 
+    Write-Host "$env:ADMIN_USER $env:ADMIN_PASSWORD"
     $securePassword = ConvertTo-SecureString $env:ADMIN_PASSWORD -AsPlainText -Force
     $credential = New-Object System.Management.Automation.PSCredential ($env:ADMIN_USER, $securePassword)
 
     $scriptBlock = {
         param ($packageName, $version, $packageParameters)
+        Write-Host "$packageName $version $packageParameters $env:JFROG_ARTIFACTORY_URL $env:JFROG_REPOSITORY $env:JFROG_USERID $env:JFROG_TOKEN"
         choco install $packageName --version $version --package-parameters=`"`'$packageParameters`'`" --source "$env:JFROG_ARTIFACTORY_URL/api/nuget/$env:JFROG_REPOSITORY/" --user="$env:JFROG_USERID" --password="$env:JFROG_TOKEN" -y --force
     }
     Invoke-Command -ComputerName $remote_host -Credential $credential -ScriptBlock $scriptBlock -ArgumentList $packageName, $version, $packageParameters
