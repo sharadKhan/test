@@ -22,14 +22,14 @@ jobs:
         run: |
           VERSION=${{ github.event.inputs.VERSION }}
           PACKAGES=$(jq -c --arg version "$VERSION" '.[] | select(.version == $version) | .msis' config/create-package-config.json)
-          echo "packages=$PACKAGES" >> $GITHUB_ENV
+          echo "::set-output name=packages::$PACKAGES"
 
   build:
     needs: prepare-packages
     runs-on: self-hosted
     strategy:
       matrix:
-        msi: ${{ fromJson(env.packages) }}
+        msi: ${{ fromJson(needs.prepare-packages.outputs.packages) }}
 
     steps:
       - name: Checkout repository
