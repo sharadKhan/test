@@ -36,6 +36,29 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Setup Choco package
+        run: |
+          if (-not (Get-Command choco -ErrorAction SilentlyContinue)) {
+            Write-Output "Chocolatey is not installed. Installing Chocolatey..."
+            Set-ExecutionPolicy Bypass -Scope Process -Force; 
+            [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; 
+            iwr https://community.chocolatey.org/install.ps1 -UseBasicParsing | iex
+          } else {
+            Write-Output "Chocolatey is already installed."
+          }
+
+      - name: Install JFROG CLI
+        run: |
+          if (-not (Get-Command jfrog -ErrorAction SilentlyContinue)) {
+            Write-Output "JFrog CLI is not installed. Installing JFrog CLI..."
+            choco install jfrog-cli -y
+          } else {
+            Write-Output "JFrog CLI is already installed."
+          }
+        env:
+          JF_URL: ${{ vars.JFROG_ARTIFACTORY_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.JFROG_TOKEN }}
+      
       - name: Create package
         run: |
           $scriptPath = "${{ github.workspace }}\scripts\create-package.ps1"
