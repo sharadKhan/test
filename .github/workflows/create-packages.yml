@@ -1,0 +1,45 @@
+name: Create and upload chocolatey packages to JFrog
+
+on:
+  workflow_dispatch:
+    inputs:
+      VERSION:
+        description: 'Version to process'
+        required: true
+        type: string
+
+jobs:
+  prepare-packages:
+    runs-on: ubuntu-latest
+    outputs:
+      packages: ${{ steps.prepare.outputs.packages }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Read and filter package configuration
+        id: prepare
+        run: |
+          VERSION=${{ github.event.inputs.VERSION }}
+          PACKAGES=$(jq -c --arg version "$VERSION" '.[] | select(.version == $version) | .msis' config/create-package-config.json)
+          echo "packages=$PACKAGES" >> $GITHUB_ENV
+
+  build:
+    needs: prepare-packages
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        msi: ${{ fromJson(env.packages) }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Create package
+        run: |
+          $scriptPath = "${{ github.workspace }}\scripts\create-package.ps1"
+          & $scriptPath -version "${{ github.event.inputs.VERSION }}" -msiname "${{ matrix.msi.MSI_NAME }}" -msipath "${{ matrix.msi.MSI_PATH }}"
+
+      - name: Upload package
+        run: |
+          jf rt u ".\packs\${{ matrix.msi.MSI_NAME }}.${{ github.event.inputs.VERSION }}.nupkg" ${{ vars.JFROG_REPOSITORY }}

@@ -30,7 +30,7 @@ jobs:
       - name: Create package 
         run: |
          $scriptPath = "${{ github.workspace }}\scripts\create-package.ps1"
-         & $scriptPath -version "${{ github.event.inputs.VERSION }}" -msiName "${{ github.event.inputs.MSI_NAME }}" -msiPath "${{ github.event.inputs.MSI_PATH }}"
+         & $scriptPath -version "${{ github.event.inputs.VERSION }}" -msiPath "${{ github.event.inputs.MSI_PATH }}"
  
       - name: Upload package
         run: |

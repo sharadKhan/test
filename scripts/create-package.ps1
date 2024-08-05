@@ -1,6 +1,5 @@
 param (
     [string]$version,
-    [string]$msiName,
     [string]$msiPath
 )
 
@@ -9,8 +8,8 @@ param (
 
 $workingDirectory = Get-Location
 
-# Remove space as there should not be any spaces for .nuspec file.
-$msiName = $msiName -replace ' ', ''
+# Extract filename and Remove space as there should not be any spaces for .nuspec file.
+$msiName = [System.IO.Path]::GetFileNameWithoutExtension($msiPath) -replace ' ', ''
 
 # Get checksum.
 $checksum = Get-FileHash -Path $msiPath -Algorithm SHA256 | Select-Object -ExpandProperty Hash

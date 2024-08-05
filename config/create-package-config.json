@@ -1,28 +1,29 @@
-[{
-    "version" : "1.0.0",
-    "msis": [{
-      "MSI_NAME": "MSI1",
-      "VERSION": "1.1.0",
-      "MSI_PATH": ".\\builds\\MSIDemo.msi"
-    },
-    {
-      "MSI_NAME": "MSI2",
-      "VERSION": "1.2.0",
-      "MSI_PATH": ".\\builds\\MSIDemo2.msi"
-    }]
-   },
-    {
-    "version" : "1.1.0",
-    "msis": [{
-      "MSI_NAME": "MSI1",
-      "VERSION": "1.1.0",
-      "MSI_PATH": ".\\builds\\MSIDemo.msi"
-    },
-    {
-      "MSI_NAME": "MSI2",
-      "VERSION": "1.2.0",
-      "MSI_PATH": ".\\builds\\MSIDemo2.msi"
-    }]
-   }
+[
+  {
+    "version": "6.0.0",
+    "msis": [
+      {
+        "MSI_NAME": "MSIDemo",
+        "MSI_PATH": "\\BG4PHS29EPCOVM1\\shared\\MSIDemo.msi"
+      },
+      {
+        "MSI_NAME": "MSIDemo2",
+        "MSI_PATH": "\\BG4PHS29EPCOVM1\\shared\\MSIDemo2.msi"
+      }
+    ]
+  },
+  {
+    "version": "7.0.0",
+    "msis": [
+      {
+        "MSI_NAME": "MSIDemo",
+        "MSI_PATH": "\\BG4PHS29EPCOVM1\\shared\\MSIDemo.msi"
+      },
+      {
+        "MSI_NAME": "MSIDemo2",
+        "MSI_PATH": "\\BG4PHS29EPCOVM1\\shared\\MSIDemo2.msi"
+      }
+    ]
+  }
+
 ]
-  
