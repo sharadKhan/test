@@ -29,6 +29,95 @@
 
 # Configuration
 
+```json
+{
+    "customerId": "custmerId",
+    "customerName": "CustomerA",
+    "location": "Location",
+    "version": "3.0.0",
+    "versionParamters": [
+        {
+            "version": "3.0.1",
+            "virtualMachines": [
+                {
+                    "ipAddress": "172.29.74.154",
+                    "msis": [
+                        {
+                            "msi": "MSIDemo",
+                            "msipath": "\\\\BG4PHS29EPCOVM1\\shared\\MSIDemo.msi",
+                            "arguments": {
+                                "US_LOCAL_SERVER": "sonatashrdss",
+                                "US_LOCAL_AUTHENTICATION": "1"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "ipAddress": "VM2",
+                    "msis": [
+                        {
+                            "msi": "MSI3",
+                            "msipath": "..\\builds\\MSIDemo.msi",
+                            "arguments": {
+                                "argument1": "value1",
+                                "argument2": "value2"
+                            }
+                        },
+                        {
+                            "msi": "MSI4",
+                            "msipath": "..\\builds\\MSIDemo.msi",
+                            "arguments": {
+                                "argument1": "value1",
+                                "argument2": "value2"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "version": "3.0.0",
+            "virtualMachines": [
+                {
+                    "ipAddress": "172.29.74.154",
+                    "msis": [
+                        {
+                            "msi": "MSIDemo",
+                            "msipath": "\\\\BG4PHS29EPCOVM1\\shared\\MSIDemo.msi",
+                            "arguments": {
+                                "US_LOCAL_SERVER": "sonatashrdss",
+                                "US_LOCAL_AUTHENTICATION": "1"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "ipAddress": "VM2",
+                    "msis": [
+                        {
+                            "msi": "MSI3",
+                            "msipath": "..\\builds\\MSIDemo.msi",
+                            "arguments": {
+                                "argument1": "value3",
+                                "argument2": "value4"
+                            }
+                        },
+                        {
+                            "msi": "MSI4",
+                            "msipath": "..\\builds\\MSIDemo.msi",
+                            "arguments": {
+                                "argument1": "value5",
+                                "argument2": "value6"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+```
+
 # Below are the MSIs which needs to be deployed as part of the automation.
 
 - Super Site Server.msi
