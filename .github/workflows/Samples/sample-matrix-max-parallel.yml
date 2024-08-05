@@ -1,5 +1,6 @@
 name: Sample Run Max 2 Jobs In Parallel
-on: push
+on:
+  workflow_dispatch:
 jobs:
   job1:
     runs-on: ubuntu-latest
