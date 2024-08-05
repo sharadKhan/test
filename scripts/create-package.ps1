@@ -31,7 +31,7 @@ $toolsDir = Join-Path -Path $packageDir -ChildPath "tools"
 $installScriptPath = Join-Path -Path $packageDir -ChildPath "tools\chocolateyinstall.ps1"
 
 # Create a new Chocolatey package.
-choco new $msiName --version $version
+choco new $msiName --version $version --force
 
 # Remove the files which are not required.
 Remove-FilesExcept -DirectoryPath $packageDir -FilePathToKeep $nuspecPath
@@ -73,7 +73,7 @@ $installScriptContent = @"
     validExitCodes = @(0, 3010, 1641)
 }
 
-Install-ChocolateyPackage @packageArgs 
+Install-ChocolateyInstallPackage @packageArgs 
 
 "@
 Set-Content -Path $installScriptPath -Value $installScriptContent
