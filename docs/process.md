@@ -178,6 +178,8 @@ input: Json
 
   #### Post-installation steps
 
+  #### Validation steps
+
 - Site Server.msi
 
   #### Parameters
@@ -186,6 +188,7 @@ input: Json
 
   #### Post-installation steps
 
+  #### Validation steps
 
 - Company Server.msi
 
@@ -195,21 +198,7 @@ input: Json
 
   #### Post-installation steps
 
-- UltiPro Enterprise Server - Super Site Edition.msi
-
-  #### Parameters
-
-  #### Pre-installation steps
-
-  #### Post-installation steps
-
-- SSO Host Service.msi
-
-  #### Parameters
-
-  #### Pre-installation steps
-
-  #### Post-installation steps
+  #### Validation steps
 
 - UltiPro Enterprise Server - Super Site Edition.msi
 
@@ -219,6 +208,8 @@ input: Json
 
   #### Post-installation steps
 
+  #### Validation steps
+
 - SSO Host Service.msi
 
   #### Parameters
@@ -226,6 +217,28 @@ input: Json
   #### Pre-installation steps
 
   #### Post-installation steps
+
+  #### Validation steps
+
+- UltiPro Enterprise Server - Super Site Edition.msi
+
+  #### Parameters
+
+  #### Pre-installation steps
+
+  #### Post-installation steps
+
+  #### Validation steps
+
+- SSO Host Service.msi
+
+  #### Parameters
+
+  #### Pre-installation steps
+
+  #### Post-installation steps
+
+  #### Validation steps
 
 - Sync Service.msi
 
@@ -235,6 +248,8 @@ input: Json
 
   #### Post-installation steps
 
+  #### Validation steps
+
 - Application Server.msi
 
   #### Parameters
@@ -243,6 +258,7 @@ input: Json
 
   #### Post-installation steps
 
+  #### Validation steps
 
 - DPM Server.msi
 
@@ -252,6 +268,8 @@ input: Json
 
   #### Post-installation steps
 
+  #### Validation steps
+
 - BackOffice Server.msi
 
   #### Parameters
@@ -259,6 +277,8 @@ input: Json
   #### Pre-installation steps
 
   #### Post-installation steps
+
+  #### Validation steps
 
 - Web Server.msi
 
@@ -268,10 +288,10 @@ input: Json
 
   #### Post-installation steps
 
- 
- ### References  
-[Parallel Execution on Same Runner](https://github.com/orgs/community/discussions/26769)
-
   #### Validation steps
+ 
+  # Rollback steps
 
-  #### Rollback steps
+   ### References  
+  [Parallel Execution on Same Runner](https://github.com/orgs/community/discussions/26769)
+
