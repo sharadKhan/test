@@ -15,7 +15,7 @@ jobs:
       - name: Read package configuration
         id: prepare
         run: |
-          PACKAGES=$(cat config/create-package-config.json)
+          PACKAGES=$(jq -c . config/create-package-config.json)
           echo "::set-output name=packages::$PACKAGES"
 
   build:
