@@ -46,6 +46,25 @@
   #### Pre-installation steps
 
   #### Post-installation steps
+
+- Site Server.msi
+
+  #### Parameters
+
+  #### Pre-installation steps
+
+  #### Post-installation steps
+
+
+  - ServerUpdater_SuperSite.exe
+
+  #### Parameters
+
+  #### Pre-installation steps
+
+  #### Post-installation steps
+
+  
  ### References  
 [Parallel Execution on Same Runner](https://github.com/orgs/community/discussions/26769)
 
