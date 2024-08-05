@@ -7,8 +7,9 @@
 ### Strategies
 
 - **Parallel Execution** \
-  Run the build and deployment processes in parallel rather than sequentially using  GitHub Actions Parallel Jobs
-  Question: What are the MSI which can be deplued in parallel and what are sequential flows
+  Run the build and deployment processes in parallel rather than sequentially using  GitHub Actions Parallel Jobs \
+  Questions: 
+  - What are the MSIs which can be deployed in parallel and what are sequential flows.
 - **Concurrent Deployment** \
   Deploy MSIs concurrently to different VMs using PowerShell
 - **Caching dependencies** \
