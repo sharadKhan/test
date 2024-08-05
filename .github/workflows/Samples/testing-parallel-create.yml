@@ -1,0 +1,49 @@
+name: Create and upload chocolatey packages to JFrog
+
+on:
+  workflow_dispatch:
+
+jobs:
+  prepare-packages:
+    runs-on: ubuntu-latest
+    outputs:
+      packages: ${{ steps.prepare.outputs.packages }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Read package configuration
+        id: prepare
+        run: |
+          PACKAGES=$(cat config/create-package-config.json)
+          echo "::set-output name=packages::$PACKAGES"
+
+  build:
+    needs: prepare-packages
+    runs-on: self-hosted
+
+    strategy:
+      matrix:
+        package: ${{ fromJson(needs.prepare-packages.outputs.packages) }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Choco package
+        run: Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iwr https://community.chocolatey.org/install.ps1 -UseBasicParsing | iex
+
+      - name: Install JFROG CLI
+        uses: jfrog/setup-jfrog-cli@v4
+        env:
+          JF_URL: ${{ vars.JFROG_ARTIFACTORY_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.JFROG_TOKEN }}
+
+      - name: Create package
+        run: |
+          $scriptPath = "${{ github.workspace }}\scripts\create-package.ps1"
+          & $scriptPath -version "${{ matrix.package.VERSION }}" -msiname "${{ matrix.package.MSI_NAME }}" -msipath "${{ matrix.package.MSI_PATH }}"
+
+      - name: Upload package
+        run: |
+          jf rt u ".\packs\${{ matrix.package.MSI_NAME }}.${{ matrix.package.VERSION }}.nupkg" ${{ vars.JFROG_REPOSITORY }}
