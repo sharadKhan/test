@@ -19,7 +19,8 @@
 - **Containerization** \
   Use containers to ensure a consistent environment and reduce setup time. Docker can be used to create images with all necessary dependencies.
     
-
+#### Links  
+[Parallel Execution on Same Runner](https://github.com/orgs/community/discussions/26769)
 ### Steps
 
 # Below are the MSIs which needs to be deployed as part of the automation.
