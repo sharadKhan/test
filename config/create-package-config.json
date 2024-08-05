@@ -1,13 +1,13 @@
 [
     {
-      "MSI_NAME": "package1",
-      "VERSION": "1.0.0",
-      "MSI_PATH": "path/to/package1.msi"
+      "MSI_NAME": "MSI1",
+      "VERSION": "1.1.0",
+      "MSI_PATH": ".\\builds\\MSIDemo.msi"
     },
     {
-      "MSI_NAME": "package2",
-      "VERSION": "1.0.0",
-      "MSI_PATH": "path/to/package2.msi"
+      "MSI_NAME": "MSI2",
+      "VERSION": "1.2.0",
+      "MSI_PATH": ".\\builds\\MSIDemo2.msi"
     }
 ]
   
