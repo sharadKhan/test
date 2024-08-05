@@ -187,7 +187,7 @@ input: Json
   #### Post-installation steps
 
 
-  - ServerUpdater_SuperSite.exe
+- Company Server.msi
 
   #### Parameters
 
@@ -195,7 +195,80 @@ input: Json
 
   #### Post-installation steps
 
-  
+- UltiPro Enterprise Server - Super Site Edition.msi
+
+  #### Parameters
+
+  #### Pre-installation steps
+
+  #### Post-installation steps
+
+- SSO Host Service.msi
+
+  #### Parameters
+
+  #### Pre-installation steps
+
+  #### Post-installation steps
+
+- UltiPro Enterprise Server - Super Site Edition.msi
+
+  #### Parameters
+
+  #### Pre-installation steps
+
+  #### Post-installation steps
+
+- SSO Host Service.msi
+
+  #### Parameters
+
+  #### Pre-installation steps
+
+  #### Post-installation steps
+
+- Sync Service.msi
+
+  #### Parameters
+
+  #### Pre-installation steps
+
+  #### Post-installation steps
+
+- Application Server.msi
+
+  #### Parameters
+
+  #### Pre-installation steps
+
+  #### Post-installation steps
+
+
+- DPM Server.msi
+
+  #### Parameters
+
+  #### Pre-installation steps
+
+  #### Post-installation steps
+
+- BackOffice Server.msi
+
+  #### Parameters
+
+  #### Pre-installation steps
+
+  #### Post-installation steps
+
+- Web Server.msi
+
+  #### Parameters
+
+  #### Pre-installation steps
+
+  #### Post-installation steps
+
+ 
  ### References  
 [Parallel Execution on Same Runner](https://github.com/orgs/community/discussions/26769)
 
