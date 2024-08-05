@@ -16,6 +16,9 @@
   Implement incremental builds where only the changed components are rebuilt.
 - **Optimized Scripts** \
   Ensure  build and deployment scripts are optimized for performance.
+- **Containerization** \
+  Use containers to ensure a consistent environment and reduce setup time. Docker can be used to create images with all necessary dependencies.
+    
 
 ### Steps
 
