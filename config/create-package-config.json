@@ -4,11 +4,11 @@
     "msis": [
       {
         "MSI_NAME": "MSIDemo",
-        "MSI_PATH": "\\BG4PHS29EPCOVM1\\shared\\MSIDemo.msi"
+        "MSI_PATH": "\\\\BG4PHS29EPCOVM1\\shared\\MSIDemo.msi"
       },
       {
         "MSI_NAME": "MSIDemo2",
-        "MSI_PATH": "\\BG4PHS29EPCOVM1\\shared\\MSIDemo2.msi"
+        "MSI_PATH": "\\\\BG4PHS29EPCOVM1\\shared\\MSIDemo2.msi"
       }
     ]
   },
@@ -17,11 +17,11 @@
     "msis": [
       {
         "MSI_NAME": "MSIDemo",
-        "MSI_PATH": "\\BG4PHS29EPCOVM1\\shared\\MSIDemo.msi"
+        "MSI_PATH": "\\\\BG4PHS29EPCOVM1\\shared\\MSIDemo.msi"
       },
       {
         "MSI_NAME": "MSIDemo2",
-        "MSI_PATH": "\\BG4PHS29EPCOVM1\\shared\\MSIDemo2.msi"
+        "MSI_PATH": "\\\\BG4PHS29EPCOVM1\\shared\\MSIDemo2.msi"
       }
     ]
   }
