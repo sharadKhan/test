@@ -22,9 +22,8 @@ $scriptBlock = {
     }
     
     # choco install MSIDemo --version '2.0.0'  --package-parameters="'/filelocation:\\BG4PHS29EPCOVM1\shared\MSIDemo.msi /arguments:/qn&space;/norestart'" --source "https://sonatapoc.jfrog.io/artifactory/api/nuget/chocopackages-nuget/" -y --force --user="sharad1" --password="Sharad@123"
-    choco install MSIDemo --version 5.0.0 --package-parameters="'/filelocation:\\BG4PHS29EPCOVM1\shared\MSIDemo.msi /arguments:/qn%space%/norestart'" --source 'https://sonatapoc.jfrog.io/artifactory/api/nuget/chocopackages-nuget/' -y --force --user='sharad1' --password='Sharad@123'
-
-
+    # choco install MSIDemo --version 7.0.0 --package-parameters="'/filelocation:\\BG4PHS29EPCOVM1\shared\MSIDemo.msi'" --source 'https://sonatapoc.jfrog.io/artifactory/api/nuget/chocopackages-nuget/' -y --force --user='sharad1' --password='Sharad@123'
+    choco install MSIDemo --version '7.0.0'  --package-parameters="'/filelocation:\\BG4PHS29EPCOVM1\shared\MSIDemo.msi'" --source "https://sonatapoc.jfrog.io/artifactory/api/nuget/chocopackages-nuget/" -y --force --user="sharad1" --password="Sharad@123"
 }
 
 Invoke-Command -ComputerName $remote_host -Credential $credential -ScriptBlock $scriptBlock
