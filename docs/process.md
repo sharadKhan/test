@@ -1,10 +1,25 @@
-### GitHub Actions
+# GitHub Actions
 
-- create-package
+## create-package
 
-- install-customer-packages
+## install-customer-packages
 
-### Below are the MSIs which needs to be deployed as part of the automation.
+### Strategies
+
+- **Parallel Execution** \
+  Run the build and deployment processes in parallel rather than sequentially using  GitHub Actions Parallel Jobs
+- **Concurrent Deployment** \
+  Deploy MSIs concurrently to different VMs using PowerShell
+- **Caching dependencies** \
+  Cache dependencies to avoid downloading them in every build process.
+- **Incremental Builds** \
+  Implement incremental builds where only the changed components are rebuilt.
+- **Optimized Scripts** \
+  Ensure  build and deployment scripts are optimized for performance.
+
+### Steps
+
+# Below are the MSIs which needs to be deployed as part of the automation.
 
 - Super Site Server.msi
 
