@@ -42,7 +42,7 @@ jobs:
       - name: Create package
         run: |
           $scriptPath = "${{ github.workspace }}\scripts\create-package.ps1"
-          & $scriptPath -version "${{ matrix.package.VERSION }}" -msiname "${{ matrix.package.MSI_NAME }}" -msipath "${{ matrix.package.MSI_PATH }}"
+          & $scriptPath -version "${{ matrix.package.VERSION }}" -msiName "${{ matrix.package.MSI_NAME }}" -msiPath "${{ matrix.package.MSI_PATH }}"
 
       - name: Upload package
         run: |

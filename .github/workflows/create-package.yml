@@ -30,13 +30,8 @@ jobs:
       - name: Create package 
         run: |
          $scriptPath = "${{ github.workspace }}\scripts\create-package.ps1"
-         & $scriptPath -version "${{ github.event.inputs.VERSION }}" -msiname "${{ github.event.inputs.MSI_NAME }}" -msipath "${{ github.event.inputs.MSI_PATH }}"
+         & $scriptPath -version "${{ github.event.inputs.VERSION }}" -msiName "${{ github.event.inputs.MSI_NAME }}" -msiPath "${{ github.event.inputs.MSI_PATH }}"
  
       - name: Upload package
         run: |
           jf rt u ".\packs\${{ github.event.inputs.MSI_NAME }}.${{ github.event.inputs.VERSION }}.nupkg" ${{ vars.JFROG_REPOSITORY }}   
-
-
-
-   
- 
