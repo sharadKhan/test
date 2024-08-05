@@ -1,11 +1,11 @@
-# Dot-source the helper script
-. .\scripts\helper.ps1
-
 param (
     [string]$version,
     [string]$msiName,
     [string]$msiPath
 )
+
+# Dot-source the helper script
+. .\scripts\helper.ps1
 
 $workingDirectory = Get-Location
 
