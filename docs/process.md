@@ -27,7 +27,7 @@
     
 ### Steps
 
-# Configuration
+# Configuration & Secret Management
 
 ```json
 {
@@ -47,7 +47,8 @@
                             "msipath": "\\\\BG4PHS29EPCOVM1\\shared\\MSIDemo.msi",
                             "arguments": {
                                 "US_LOCAL_SERVER": "sonatashrdss",
-                                "US_LOCAL_AUTHENTICATION": "1"
+                                "US_LOCAL_AUTHENTICATION": "1",
+                                "US_PASSWORD": "<<GitHub Secret>>"
                             }
                         }
                     ]
@@ -86,7 +87,8 @@
                             "msipath": "\\\\BG4PHS29EPCOVM1\\shared\\MSIDemo.msi",
                             "arguments": {
                                 "US_LOCAL_SERVER": "sonatashrdss",
-                                "US_LOCAL_AUTHENTICATION": "1"
+                                "US_LOCAL_AUTHENTICATION": "1",
+                                "US_PASSWORD": "<<GitHub Secret>>"
                             }
                         }
                     ]
