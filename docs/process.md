@@ -1,10 +1,14 @@
 # GitHub Actions
 
-## create-package
+## 1. create-package
 
-## install-customer-packages
+## 2. create-packages
 
-### Strategies
+## 3. install-package
+
+## 4. install-packages
+
+# Strategies
 
 - **Parallel Execution** \
   Run the build and deployment processes in parallel rather than sequentially using  GitHub Actions Parallel Jobs \
@@ -21,9 +25,9 @@
 - **Containerization** \
   Use containers to ensure a consistent environment and reduce setup time. Docker can be used to create images with all necessary dependencies.
     
-#### Links  
-[Parallel Execution on Same Runner](https://github.com/orgs/community/discussions/26769)
 ### Steps
+
+# Configuration
 
 # Below are the MSIs which needs to be deployed as part of the automation.
 
@@ -42,6 +46,8 @@
   #### Pre-installation steps
 
   #### Post-installation steps
+ ### References  
+[Parallel Execution on Same Runner](https://github.com/orgs/community/discussions/26769)
 
   #### Validation steps
 
