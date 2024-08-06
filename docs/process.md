@@ -297,4 +297,6 @@ input: Json
 
    ### References  
   [Parallel Execution on Same Runner](https://github.com/orgs/community/discussions/26769)
+  [JFrog CLI](https://github.com/jfrog/setup-jfrog-cli)
+  [JFrog using SSH](https://jfrog.com/help/r/jfrog-cli-configure-jfrog-cli-to-authenticate-using-ssh/configure-user-authentication-to-use-ssh)
 
