@@ -1,0 +1,43 @@
+name: Test
+on:
+  push:
+    branches: [ Testing-branch]
+  workflow_dispatch:
+  
+jobs:
+  build:
+    # runs-on: [garm, dev, us-east4, vm, windows, medium]
+    runs-on: [garm, dev, us-east4, vm, windows, medium]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        
+      - name: Create package 
+        run: |
+          ipconfig
+          Set-Item WSMan:\localhost\Client\TrustedHosts -Value 10.210.203.122
+          ping 10.210.203.122
+          $securePassword = ConvertTo-SecureString '!@bZjbQQ!9tz' -AsPlainText -Force
+          $credential = New-Object System.Management.Automation.PSCredential ('administrator', $securePassword)
+          $scriptBlock = {
+            Copy-Item "${{ github.workspace }}\Readme.md" -Destination "D:\Shared\Packs"
+          }
+          Invoke-Command -ComputerName 10.210.203.122 -Credential $credential -ScriptBlock $scriptBlock
+
+
+# name: Test
+# on:
+#   push:
+#     branches: [ Testing-branch]
+#   workflow_dispatch:
+  
+# jobs:
+#   build:
+#     runs-on: [garm, dev, us-east4, vm, windows, medium]
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v2
+        
+#       - name: Create package 
+#         run: |
+#             Copy-Item "${{ github.workspace }}\scan_it.yml" -Destination "\\SONATA2907SS\Shared"

@@ -20,7 +20,7 @@ jobs:
       - name: Create package 
         run: |
          $scriptPath = "${{ github.workspace }}\scripts\create-package.ps1"
-         & $scriptPath -version "1.0.0" -msiPath "\\BG4PHS29EPCOVM1\shared\MSIDemo.msi"
+         & $scriptPath -version "1.0.0" -msiPath "\\SONATA2907SS\Shared\Super Site Server.msi"
       # & $scriptPath -version "${{ github.event.inputs.VERSION }}" -msiPath "${{ github.event.inputs.MSI_PATH }}"
  
       #- name: Upload package
@@ -29,4 +29,4 @@ jobs:
 
       - name: Upload package
         run: |
-          Copy-Item ".\packs\*.nupkg" -Destination "\\BG4PHS29EPCOVM1\shared\packs" 
+          Copy-Item ".\packs\*.nupkg" -Destination "\\SONATA2907SS\Shared\Packs" 
