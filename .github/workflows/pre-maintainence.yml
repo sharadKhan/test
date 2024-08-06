@@ -29,9 +29,14 @@ jobs:
     #  run: npm install @google-cloud/firestore
 
     - name: Run script
+      id: run-script
       run: node  .\scripts\customer-helper.js
       env:
         Customer: ${{ github.event.inputs.CUSTOMER }}
         Location: ${{ github.event.inputs.LOCATION }}
         Version: ${{ github.event.inputs.VERSION }}
         Workspace: '${{ github.workspace }}'
+
+    - name: Use output from Node.js script
+      run: |
+        echo "The GitHub workspace directory is: ${{ steps.run-script.outputs.response }}"

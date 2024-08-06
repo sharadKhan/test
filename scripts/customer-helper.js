@@ -1,4 +1,5 @@
 const fs = require("fs");
+const core = require('@actions/core');
 
 var customer = process.env.Customer;
 var location = process.env.Location;
@@ -50,4 +51,5 @@ for (let index = 0; index < filteredCustomers.length; index++) {
   }
 }
 console.log(response);
-return response;
+core.setOutput('response', response);
+
