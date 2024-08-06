@@ -42,5 +42,4 @@ jobs:
           $response = ConvertTo-Json '${{ steps.run-script.outputs.response }}'
           foreach ($item in $response) {
             Write-Output $item.msiPath
-            Copy-Item $item.msiPath -Destination $item.destinationPath
           }
