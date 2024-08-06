@@ -51,5 +51,5 @@ for (let index = 0; index < filteredCustomers.length; index++) {
   }
 }
 console.log(response);
-core.setOutput('response', response);
+core.setOutput('response', Json.stringify(response));
 
