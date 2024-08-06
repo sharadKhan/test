@@ -3,7 +3,7 @@ const fs = require("fs");
 var customer = process.env.Customer;
 var location = process.env.Location;
 var version = process.env.Version;
-var workingDirectory = process.env.github.workspace;
+var workingDirectory = process.env.Workspace;
 
 const customersFilePath = workingDirectory + "//docs//sample.json";
 var response = [];
