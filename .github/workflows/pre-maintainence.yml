@@ -41,6 +41,6 @@ jobs:
           echo "The GitHub workspace directory is: ${{ steps.run-script.outputs.response }}"
           $response = ConvertTo-Json '${{ steps.run-script.outputs.response }}'
           foreach ($item in $response) {
-            Write-Host ($item.msiPath)
+            Write-Output $item.msiPath
             Copy-Item $item.msiPath -Destination $item.destinationPath
           }
