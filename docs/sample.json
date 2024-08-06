@@ -12,8 +12,8 @@
                         "msis": [
                             {
                                 "msi": "MSIDemo",
-                                "msiPath": "\\BG4PHS29EPCOVM1\shared\MSIDemo.msi",
-                                "destinationPath": "\\BG4PHS29EPCOVM1\shared\destination",
+                                "msiPath": "\\\\BG4PHS29EPCOVM1\\shared\\MSIDemo.msi",
+                                "destinationPath": "\\\\BG4PHS29EPCOVM1\\shared\\destination",
                                 "arguments": {
                                     "US_LOCAL_SERVER": "sonatashrdss",
                                     "US_LOCAL_AUTHENTICATION": "1"
@@ -26,8 +26,8 @@
                         "msis": [
                             {
                                 "msi": "MSI3",
-                                "msiPath": "\\BG4PHS29EPCOVM1\shared\MSIDemo.msi",
-                                "destinationPath": "\\BG4PHS29EPCOVM1\shared\destination",
+                                "msiPath": "\\\\BG4PHS29EPCOVM1\\shared\\MSIDemo.msi",
+                                "destinationPath": "\\\\BG4PHS29EPCOVM1\\shared\\destination",
                                 "arguments": {
                                     "argument1": "value1",
                                     "argument2": "value2"
@@ -35,8 +35,8 @@
                             },
                             {
                                 "msi": "MSI4",
-                                "msiPath": "\\BG4PHS29EPCOVM1\shared\MSIDemo.msi",
-                                "destinationPath": "\\BG4PHS29EPCOVM1\shared\destination",
+                                "msiPath": "\\\\BG4PHS29EPCOVM1\\shared\\MSIDemo.msi",
+                                "destinationPath": "\\\\BG4PHS29EPCOVM1\\shared\\destination",
                                 "arguments": {
                                     "argument1": "value1",
                                     "argument2": "value2"
@@ -54,8 +54,8 @@
                         "msis": [
                             {
                                 "msi": "MSIDemo",
-                                "msiPath": "\\BG4PHS29EPCOVM1\shared\MSIDemo.msi",
-                                "destinationPath": "\\BG4PHS29EPCOVM1\shared\destination",
+                                "msiPath": "\\\\BG4PHS29EPCOVM1\\shared\\MSIDemo.msi",
+                                "destinationPath": "\\\\BG4PHS29EPCOVM1\\shared\\destination",
                                 "arguments": {
                                     "US_LOCAL_SERVER": "sonatashrdss",
                                     "US_LOCAL_AUTHENTICATION": "1"
@@ -68,8 +68,8 @@
                         "msis": [
                             {
                                 "msi": "MSI3",
-                                "msiPath": "\\BG4PHS29EPCOVM1\shared\MSIDemo.msi",
-                                "destinationPath": "\\BG4PHS29EPCOVM1\shared\destination",
+                                "msiPath": "\\\\BG4PHS29EPCOVM1\\shared\\MSIDemo.msi",
+                                "destinationPath": "\\\\BG4PHS29EPCOVM1\\shared\\destination",
                                 "arguments": {
                                     "argument1": "value3",
                                     "argument2": "value4"
@@ -77,8 +77,8 @@
                             },
                             {
                                 "msi": "MSI4",
-                                "msiPath": "\\BG4PHS29EPCOVM1\shared\MSIDemo.msi",
-                                "destinationPath": "\\BG4PHS29EPCOVM1\shared\destination",
+                                "msiPath": "\\\\BG4PHS29EPCOVM1\\shared\\MSIDemo.msi",
+                                "destinationPath": "\\\\BG4PHS29EPCOVM1\\shared\\destination",
                                 "arguments": {
                                     "argument1": "value5",
                                     "argument2": "value6"
@@ -103,8 +103,8 @@
                         "msis": [
                             {
                                 "msi": "MSIDemo",
-                                "msiPath": "\\BG4PHS29EPCOVM1\shared\MSIDemo.msi",
-                                "destinationPath": "\\BG4PHS29EPCOVM1\shared\destination",
+                                "msiPath": "\\\\BG4PHS29EPCOVM1\\shared\\MSIDemo.msi",
+                                "destinationPath": "\\\\BG4PHS29EPCOVM1\\shared\\destination",
                                 "arguments": {
                                     "US_LOCAL_SERVER": "sonatashrdss",
                                     "US_LOCAL_AUTHENTICATION": "1"
@@ -117,8 +117,8 @@
                         "msis": [
                             {
                                 "msi": "MSI3",
-                                "msiPath": "\\BG4PHS29EPCOVM1\shared\MSIDemo.msi",
-                                "destinationPath": "\\BG4PHS29EPCOVM1\shared\destination",
+                                "msiPath": "\\\\BG4PHS29EPCOVM1\\shared\\MSIDemo.msi",
+                                "destinationPath": "\\\\BG4PHS29EPCOVM1\\shared\\destination",
                                 "arguments": {
                                     "argument1": "value1",
                                     "argument2": "value2"
@@ -126,8 +126,8 @@
                             },
                             {
                                 "msi": "MSI4",
-                                "msiPath": "\\BG4PHS29EPCOVM1\shared\MSIDemo.msi",
-                                "destinationPath": "\\BG4PHS29EPCOVM1\shared\destination",
+                                "msiPath": "\\\\BG4PHS29EPCOVM1\\shared\\MSIDemo.msi",
+                                "destinationPath": "\\\\BG4PHS29EPCOVM1\\shared\\destination",
                                 "arguments": {
                                     "argument1": "value1",
                                     "argument2": "value2"
@@ -145,8 +145,8 @@
                         "msis": [
                             {
                                 "msi": "MSIDemo",
-                                "msiPath": "\\BG4PHS29EPCOVM1\shared\MSIDemo.msi",
-                                "destinationPath": "\\BG4PHS29EPCOVM1\shared\destination",
+                                "msiPath": "\\\\BG4PHS29EPCOVM1\\shared\\MSIDemo.msi",
+                                "destinationPath": "\\\\BG4PHS29EPCOVM1\\shared\\destination",
                                 "arguments": {
                                     "US_LOCAL_SERVER": "sonatashrdss",
                                     "US_LOCAL_AUTHENTICATION": "1"
@@ -159,8 +159,8 @@
                         "msis": [
                             {
                                 "msi": "MSI3",
-                                "msiPath": "\\BG4PHS29EPCOVM1\shared\MSIDemo.msi",
-                                "destinationPath": "\\BG4PHS29EPCOVM1\shared\destination",
+                                "msiPath": "\\\\BG4PHS29EPCOVM1\\shared\\MSIDemo.msi",
+                                "destinationPath": "\\\\BG4PHS29EPCOVM1\\shared\\destination",
                                 "arguments": {
                                     "argument1": "value3",
                                     "argument2": "value4"
@@ -168,8 +168,8 @@
                             },
                             {
                                 "msi": "MSI4",
-                                "msiPath": "\\BG4PHS29EPCOVM1\shared\MSIDemo.msi",
-                                "destinationPath": "\\BG4PHS29EPCOVM1\shared\destination",
+                                "msiPath": "\\\\BG4PHS29EPCOVM1\\shared\\MSIDemo.msi",
+                                "destinationPath": "\\\\BG4PHS29EPCOVM1\\shared\\destination",
                                 "arguments": {
                                     "argument1": "value5",
                                     "argument2": "value6"
