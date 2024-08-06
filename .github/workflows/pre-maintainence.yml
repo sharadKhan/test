@@ -1,0 +1,37 @@
+name: Do pre-maintenance activities
+on:
+
+  workflow_dispatch:
+    inputs:
+      CUSTOMER:
+        description: 'Customer'
+        required: false
+      LOCATION:
+        description: 'Location'
+        required: false
+      VERSION:
+        description: 'version'
+        required: true
+jobs:
+  save-document:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18'
+
+    #- name: Install dependencies
+    #  run: npm install @google-cloud/firestore
+
+    - name: Run script
+      run: node  .\scripts\customer-helper.js
+      env:
+        Customer: ${{ github.event.inputs.CUSTOMER }}
+        Location: ${{ github.event.inputs.LOCATION }}
+        Version: '${{ github.event.inputs.VERSION }}'
+  

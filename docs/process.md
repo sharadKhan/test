@@ -93,6 +93,7 @@ input: Json
 
 # Configuration & Secret Management
 
+- Queries can be on for a particular customer or for a set of customers based on location.
 ```json
 {
     "customerId": "custmerId",
