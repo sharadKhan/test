@@ -33,5 +33,6 @@ jobs:
       env:
         Customer: ${{ github.event.inputs.CUSTOMER }}
         Location: ${{ github.event.inputs.LOCATION }}
-        Version: '${{ github.event.inputs.VERSION }}'
+        Version: ${{ github.event.inputs.VERSION }}
+        Workspace: '${{ github.workspace }}''
   
