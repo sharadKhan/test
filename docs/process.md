@@ -67,6 +67,27 @@ input: Json
   Use containers to ensure a consistent environment and reduce setup time. Docker can be used to create images with all necessary dependencies.
     
 # Install MSI on Remote System
+
+ ### Set up in Runner
+  
+  ```powershell
+      Set-Item WSMan:\localhost\Client\TrustedHosts -Value "RemoteComputerName"
+  ```
+
+ ### Set up in remote
+
+  ```powershell
+    Enable-PSRemoting -Force
+  ```
+
+  ```powershell
+    Set-NetFirewallRule -Name 'WINRM-HTTP-In-TCP' -RemoteAddress Any
+  ```
+
+  ```powershell
+      Set-Item WSMan:\localhost\Client\TrustedHosts -Value "RemoteComputerName"
+  ```
+
  [Power Shell Remoting](https://https://github.com/MicrosoftDocs/PowerShell-Docs/blob/main/reference/docs-conceptual/learn/ps101/08-powershell-remoting.md) \
  [Power Shell Remoting - Second Hop](https://github.com/MicrosoftDocs/PowerShell-Docs/blob/main/reference/docs-conceptual/security/remoting/PS-remoting-second-hop.md)
 
