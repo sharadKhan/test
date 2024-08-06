@@ -15,7 +15,7 @@ jobs:
       - name: Create package 
         run: |
           ipconfig
-          Set-Item WSMan:\localhost\Client\TrustedHosts -Value 10.210.203.122
+          & Set-Item WSMan:\localhost\Client\TrustedHosts -Value 10.210.203.122
           ping 10.210.203.122
           $securePassword = ConvertTo-SecureString '!@bZjbQQ!9tz' -AsPlainText -Force
           $credential = New-Object System.Management.Automation.PSCredential ('administrator', $securePassword)
