@@ -1,0 +1,32 @@
+name: Create and upload chocolatey package to JFrog
+on:
+  push:
+    branches: [ Testing-branch]
+  workflow_dispatch:
+    inputs:
+      VERSION:
+        description: 'Version'
+        required: true
+      MSI_PATH:
+        description: 'MSI PATH'
+        required: true
+jobs:
+  build:
+    runs-on: [garm, dev, us-east4, vm, windows, medium]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        
+      - name: Create package 
+        run: |
+         $scriptPath = "${{ github.workspace }}\scripts\create-package.ps1"
+         & $scriptPath -version "1.0.0" -msiPath "\\BG4PHS29EPCOVM1\shared\MSIDemo.msi"
+      # & $scriptPath -version "${{ github.event.inputs.VERSION }}" -msiPath "${{ github.event.inputs.MSI_PATH }}"
+ 
+      #- name: Upload package
+      #  run: |
+      #    jf rt u ".\packs\${{ github.event.inputs.MSI_NAME }}.${{ github.event.inputs.VERSION }}.nupkg" ${{ vars.JFROG_REPOSITORY }}
+
+      - name: Upload package
+        run: |
+          Copy-Item ".\packs\*.nupkg" -Destination "\\BG4PHS29EPCOVM1\shared\packs" 
