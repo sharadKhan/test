@@ -48,9 +48,8 @@ jobs:
           $response = ConvertTo-Json '${{ steps.run-script.outputs.response }}'
          
           foreach ($item in $response) {
-            echo $item.msiPath
+            echo "MSI Path is : $item.msiPath"
              // download MSI to Runner if not exists
-            # jf rt dl "msiexecutables-generic-local/builds/$item.msiPath"
           }
       
       - name: Download and Transfer MSI to Remote Host
@@ -61,16 +60,17 @@ jobs:
           $securePass = ConvertTo-SecureString $remotePass -AsPlainText -Force
           $credential = New-Object System.Management.Automation.PSCredential ($remoteUser, $securePass)
 
-          $response = ConvertTo-Json '${{ steps.run-script.outputs.response }}'
+          $response = ConvertFrom-Json '${{ steps.run-script.outputs.response }}'
           
           foreach ($item in $response) {
             echo "MSI Path is $item.msiPath"
             $msiPath = $item.msiPath
-            $localMsiPath = "$PWD\$msiPath"
+            $msiName = [System.IO.Path]::GetFileName($msiPath)
+            $localMsiPath = "$PWD\$msiName"
             $destinationPath = "C:\MSI-Files"
 
             # Download MSI from JFrog Artifactory
-            jf rt dl "msiexecutables-generic-local/builds/$msiPath" -u ${{ secrets.JFROG_USER }} -p ${{ secrets.JFROG_PASSWORD }} --url ${{ secrets.JFROG_ARTIFACTORY_URL }} -d $PWD
+            jf rt dl "msiexecutables-generic-local/builds/$msiName" -d $PWD
 
             # Ensure the destination directory exists on the remote host
             Invoke-Command -ComputerName $remoteHost -Credential $credential -ScriptBlock {
