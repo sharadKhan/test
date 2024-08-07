@@ -19,6 +19,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Install JFROG CLI
+        uses: jfrog/setup-jfrog-cli@v4
+        env:
+          JF_URL: ${{ vars.JFROG_ARTIFACTORY_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.JFROG_TOKEN }} 
+
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
@@ -42,6 +48,38 @@ jobs:
           $response = ConvertTo-Json '${{ steps.run-script.outputs.response }}'
          
           foreach ($item in $response) {
+            echo $item.msiPath
              // download MSI to Runner if not exists
-            Write-Output $item.msiPath
+            # jf rt dl "msiexecutables-generic-local/builds/$item.msiPath"
+          }
+      
+      - name: Download and Transfer MSI to Remote Host
+        run: |
+          $remoteHost = "10.210.203.122"
+          $remoteUser = "administrator"
+          $remotePass = "!@bZjbQQ!9tz"
+          $securePass = ConvertTo-SecureString $remotePass -AsPlainText -Force
+          $credential = New-Object System.Management.Automation.PSCredential ($remoteUser, $securePass)
+
+          $response = ConvertTo-Json '${{ steps.run-script.outputs.response }}'
+          
+          foreach ($item in $response) {
+            echo "MSI Path is $item.msiPath"
+            $msiPath = $item.msiPath
+            $localMsiPath = "$PWD\$msiPath"
+            $destinationPath = "C:\MSI-Files"
+
+            # Download MSI from JFrog Artifactory
+            jf rt dl "msiexecutables-generic-local/builds/$msiPath" -u ${{ secrets.JFROG_USER }} -p ${{ secrets.JFROG_PASSWORD }} --url ${{ secrets.JFROG_ARTIFACTORY_URL }} -d $PWD
+
+            # Ensure the destination directory exists on the remote host
+            Invoke-Command -ComputerName $remoteHost -Credential $credential -ScriptBlock {
+              param ($destinationPath)
+              if (-Not (Test-Path -Path $destinationPath)) {
+                New-Item -Path $destinationPath -ItemType Directory -Force
+              }
+            } -ArgumentList $destinationPath
+
+            # Copy the MSI file to the remote host
+            Copy-Item -Path $localMsiPath -Destination "\\$remoteHost\$destinationPath" -Force -Credential $credential
           }
