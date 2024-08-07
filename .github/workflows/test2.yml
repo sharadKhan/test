@@ -9,9 +9,8 @@ jobs:
     steps:
       - name: Checkout repository
         run: |
-          $name = "abhishek" 
-        env:
-          NAME : $name
+          $name = "abhishek"
+          Write-Output "NAME=$name" >> $env.GITHUB_ENV
 
       - name: Create package
         run: |
