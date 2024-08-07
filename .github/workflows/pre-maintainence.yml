@@ -49,7 +49,6 @@ jobs:
          
           foreach ($item in $response) {
             echo "MSI Path is : $item.msiPath"
-             // download MSI to Runner if not exists
           }
       
       - name: Download and Transfer MSI to Remote Host
