@@ -20,4 +20,4 @@ jobs:
  
       - name: Upload package
         run: |
-          jf rt u ${{ github.event.inputs.MSI_PATH }} "https://sonatapoc.jfrog.io/artifactory/api/generic/msiexecutables-generic-local"   
+          jf rt u ${{ github.event.inputs.MSI_PATH }} https://sonatapoc.jfrog.io/artifactory/api/generic/msiexecutables-generic-local   
