@@ -91,28 +91,8 @@ jobs:
 
           Copy-Item "${{ env.MSI_COPIED_PATH }}" -Destination "$destinationPath" -ToSession $Session
           Remove-PSSession -Session $Session
-
-      - name: Create Chocolatey package
-        run: |
-            $scriptPath = "${{ github.workspace }}\scripts\create-package.ps1"
-            & $scriptPath -version "${{ env.BUILD_VERSION }}" -msiPath "${{ env.MSI_COPIED_PATH }}"
-            $packagPath = ".\packs\*.nupkg"
-
-            $securePassword = ConvertTo-SecureString '!@bZjbQQ!9tz' -AsPlainText -Force
-            $credential = New-Object System.Management.Automation.PSCredential ('CORPORATE_NT\administrator', $securePassword)
-
-            $Session = New-PSSession -ComputerName "${{ env.HALO_IP_ADDRESS }}" -Credential $credential
-            $destinationPath = "D:\Artifacts\PACKS"
-            Invoke-Command -Session $Session -ScriptBlock {     
-                param ($destinationPath)    
-                if (-not (Test-Path -Path $destinationPath)) {        
-                  New-Item -Path $destinationPath -ItemType Directory     
-                } 
-              } -ArgumentList $destinationPath
-          Copy-Item "$packagPath" -Destination "$destinationPath" -ToSession $Session
-          Remove-PSSession -Session $Session
           
-        - name: Create Chocolatey package
+        - name: Create Chocolatey package and Install
           run: |
               $scriptPath = "${{ github.workspace }}\scripts\create-package.ps1"
               & $scriptPath -version "${{ env.BUILD_VERSION }}" -msiPath "${{ env.MSI_COPIED_PATH }}"
