@@ -9,12 +9,12 @@ on:
           type: string
           required: true
           default: "10.210.222.182"
-         MSI_PATH:
+        MSI_PATH:
           description: "MSI Path"
           type: string
           required: true
           default: "\\\\dev.us.corp\\de\\Dev\\DailyBuilds\\60046\\NET CD Structure\\UltiProWeb\\Web Server.msi"
-         BUILD_VERSION:
+        BUILD_VERSION:
           description: "Build version"
           type: string
           required: true
@@ -25,7 +25,7 @@ jobs:
     runs-on: [garm, dev, us-east4, vm, windows, medium]
     env: # No need if workflow_dispatch works
       HALO_IP_ADDRESS : "10.210.222.182"
-      MSI_PATH : "\\dev.us.corp\de\Dev\DailyBuilds\60046\NET CD Structure\UltiProWeb\Web Server.msi"
+      MSI_PATH : "\\\\dev.us.corp\\de\\Dev\\DailyBuilds\\60046\\NET CD Structure\\UltiProWeb\\Web Server.msi"
       BUILD_VERSION : "8.0.0"
     steps:
       - name: Checkout repository
@@ -42,7 +42,7 @@ jobs:
            Write-Output "Chocolatey is already installed."
           }
         
-       - name: Copy MSI from Build path to Runner 
+      - name: Copy MSI from Build path to Runner 
         run: |
           # Credentials will be in GCP secrets.
           $workingDirectory = "${{ github.workspace }}"
@@ -53,6 +53,8 @@ jobs:
           $folderPath = [System.IO.Path]::GetDirectoryName("${{ env.MSI_PATH }}")
           $file = [System.IO.Path]::GetFileName("${{ env.MSI_PATH }}")
           New-PSDrive -Name Z -PSProvider FileSystem -Root  $folderPath -Credential $networkCredential -Persist
+
+          Write-Output "MSI_FILE=$file" >> $env:GITHUB_ENV
 
           # Copy the file to the local directory
           Copy-Item "Z:\$file" -Destination  $workingDirectory
@@ -94,5 +96,50 @@ jobs:
         run: |
             $scriptPath = "${{ github.workspace }}\scripts\create-package.ps1"
             & $scriptPath -version "${{ env.BUILD_VERSION }}" -msiPath "${{ env.MSI_COPIED_PATH }}"
-            cd packs
-            dir
+            $packagPath = ".\packs\*.nupkg"
+
+            $securePassword = ConvertTo-SecureString '!@bZjbQQ!9tz' -AsPlainText -Force
+            $credential = New-Object System.Management.Automation.PSCredential ('CORPORATE_NT\administrator', $securePassword)
+
+            $Session = New-PSSession -ComputerName "${{ env.HALO_IP_ADDRESS }}" -Credential $credential
+            $destinationPath = "D:\Artifacts\PACKS"
+            Invoke-Command -Session $Session -ScriptBlock {     
+                param ($destinationPath)    
+                if (-not (Test-Path -Path $destinationPath)) {        
+                  New-Item -Path $destinationPath -ItemType Directory     
+                } 
+              } -ArgumentList $destinationPath
+          Copy-Item "$packagPath" -Destination "$destinationPath" -ToSession $Session
+          Remove-PSSession -Session $Session
+          
+        - name: Create Chocolatey package
+          run: |
+              $scriptPath = "${{ github.workspace }}\scripts\create-package.ps1"
+              & $scriptPath -version "${{ env.BUILD_VERSION }}" -msiPath "${{ env.MSI_COPIED_PATH }}"
+              $packagPath = ".\packs\*.nupkg"
+
+              $securePassword = ConvertTo-SecureString '!@bZjbQQ!9tz' -AsPlainText -Force
+              $credential = New-Object System.Management.Automation.PSCredential ('CORPORATE_NT\administrator', $securePassword)
+
+              $Session = New-PSSession -ComputerName "${{ env.HALO_IP_ADDRESS }}" -Credential $credential
+              $destinationPath = "D:\Artifacts\PACKS"
+              Invoke-Command -Session $Session -ScriptBlock {     
+                  param ($destinationPath)    
+                  if (-not (Test-Path -Path $destinationPath)) {        
+                    New-Item -Path $destinationPath -ItemType Directory     
+                  } 
+                } -ArgumentList $destinationPath
+              Copy-Item "$packagPath" -Destination "$destinationPath" -ToSession $Session
+
+              Invoke-Command -Session $Session -ScriptBlock {     
+                  param ($destinationPath, $msiFile, $version)
+
+                  $packageParameters = '/filelocation:$destinationPath\$msiFile /arguments:US_COMPLUS_USERNAME=".administrator"%space%US_COMPLUS_PASSWORD="!@bZjbQQ!9tz"%space%US_DOTNETWEB_URL="https://sonatashrdweb.newgen.corp:443"%space%US_CLASSICWEB_URL="https://sonatashrdweb.newgen.corp:444"%space%US_DOTNETWEB_PORTNUMBER="80"%space%US_CLASSICWEB_PORTNUMBER="81"%space%US_SITESERVER="sonatashrdsite"%space%US_SITEUSER="keyuser"%space%US_SITEPASSWORD="password"%space%US_USSALT="password"%space%US_WEB_USERNAME=".administrator"%space%US_WEB_PASSWORD="!@bZjbQQ!9tz"%space%US_DOTNETWEB_SSL_PORTNUMBER="443"%space%US_CLASSICWEB_SSL_PORTNUMBER="444"%space%US_CERTIFICATE="c:installsnewgen.corp.pfx"%space%US_CLASSICWEB_CERTIFICATE="c:installsnewgen.corp.pfx"%space%US_CERTIFICATE_PASSWORD="7S0x1SzTGXDdsVey"%space%US_CLASSICWEB_CERTIFICATE_PASSWORD="7S0x1SzTGXDdsVey"%space%REBOOT="ReallySuppress"%space%'
+                  
+                  Write-Output  "Parameters=$packageParameters"
+                  cd $destinationPath
+                  choco install $msiFile --version $version --package-parameters=`"`'$packageParameters`'`" --source . -y --force
+                 
+              } -ArgumentList $destinationPath, ${{ env.MSI_FILE}}, ${{ env.BUILD_VERSION }}
+
+              Remove-PSSession -Session $Session
