@@ -1,4 +1,4 @@
-name: Create and upload chocolatey package to JFrog
+name: Create and upload chocolatey package and msi to JFrog
 on:
   workflow_dispatch:
     inputs:
@@ -42,4 +42,9 @@ jobs:
  
       - name: Upload package
         run: |
-          jf rt u ".\packs\${{ github.event.inputs.MSI_NAME }}.${{ github.event.inputs.VERSION }}.nupkg" ${{ vars.JFROG_REPOSITORY }}   
+          jf rt u ".\packs\${{ github.event.inputs.MSI_NAME }}.${{ github.event.inputs.VERSION }}.nupkg" ${{ vars.JFROG_PACKAGE_REPOSITORY }} 
+      
+      - name : Upload msi
+        run : |
+         jf rt u ${{ github.event.inputs.MSI_PATH }} ${{ vars.JFROG_REPOSITORY }} 
+          
