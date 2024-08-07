@@ -7,13 +7,13 @@ on:
         HALO_IP_ADDRESS:
           description: 'Halo IP address'
           type: string
-          required: true,
+          required: true
           default: "10.210.222.182"
          MSI_PATH:
           description: "MSI Path"
           type: string
           required: true
-          default: "\\dev.us.corp\de\Dev\DailyBuilds\60046\NET CD Structure\UltiProWeb\Web Server.msi"
+          default: "\\\\dev.us.corp\\de\\Dev\\DailyBuilds\\60046\\NET CD Structure\\UltiProWeb\\Web Server.msi"
          BUILD_VERSION:
           description: "Build version"
           type: string
@@ -23,6 +23,10 @@ on:
 jobs:
   build:
     runs-on: [garm, dev, us-east4, vm, windows, medium]
+    env: # No need if workflow_dispatch works
+      HALO_IP_ADDRESS = "10.210.222.182"
+      MSI_PATH = "\\dev.us.corp\de\Dev\DailyBuilds\60046\NET CD Structure\UltiProWeb\Web Server.msi"
+      BUILD_VERSION = "8.0.0"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -41,20 +45,20 @@ jobs:
        - name: Copy MSI from Build path to Runner 
         run: |
           # Credentials will be in GCP secrets.
-          $workingDirectory = ${{ github.workspace }}
+          $workingDirectory = "${{ github.workspace }}"
           $secureNetworkPassword = ConvertTo-SecureString "Abhishek@ukg!@#" -AsPlainText -Force
           $networkCredential = New-Object System.Management.Automation.PSCredential ("CORPORATE_NT\abhishek.m", $secureNetworkPassword)
 
           # Map network drive
-          $folderPath = [System.IO.Path]::GetDirectoryName(${{ github.event.inputs.MSI_PATH }})
-          $file = [System.IO.Path]::GetFileName(${{ github.event.inputs.MSI_PATH }})
+          $folderPath = [System.IO.Path]::GetDirectoryName("${{ env.MSI_PATH }}")
+          $file = [System.IO.Path]::GetFileName("${{ env.MSI_PATH }}")
           New-PSDrive -Name Z -PSProvider FileSystem -Root  $folderPath -Credential $networkCredential -Persist
 
           # Copy the file to the local directory
           Copy-Item "Z:\$file" -Destination  $workingDirectory
 
           # Verify the file exists at the destination
-          $msiCopiedPath = "  $workingDirectory\$file" 
+          $msiCopiedPath = "$workingDirectory\$file" 
           Write-Output "MSI_COPIED_PATH=$msiCopiedPath" >> $env:GITHUB_ENV
 
           if (Test-Path -Path $msiCopiedPath) {
@@ -69,12 +73,12 @@ jobs:
       - name: Copy MSI from Runner to Halo
         run: |
          
-          Set-Item WSMan:\localhost\Client\TrustedHosts -Value "${{ github.event.inputs.HALO_IP_ADDRESS }}" -Force
+          Set-Item WSMan:\localhost\Client\TrustedHosts -Value "${{ env.HALO_IP_ADDRESS }}" -Force
 
           $securePassword = ConvertTo-SecureString '!@bZjbQQ!9tz' -AsPlainText -Force
           $credential = New-Object System.Management.Automation.PSCredential ('CORPORATE_NT\administrator', $securePassword)
           
-          $Session = New-PSSession -ComputerName "${{ github.event.inputs.HALO_IP_ADDRESS }}" -Credential $credential
+          $Session = New-PSSession -ComputerName "${{ env.HALO_IP_ADDRESS }}" -Credential $credential
           $destinationPath = "D:\Artifacts\MSIS"
           Invoke-Command -Session $Session -ScriptBlock {     
             param ($destinationPath)    
@@ -89,6 +93,6 @@ jobs:
       - name: Create Chocolatey package
         run: |
             $scriptPath = "${{ github.workspace }}\scripts\create-package.ps1"
-            & $scriptPath -version "${{ github.event.inputs.BUILD_VERSION }}" -msiPath "${{ github.event.inputs.MSI_COPIED_PATH }}"
+            & $scriptPath -version "${{ env.BUILD_VERSION }}" -msiPath "${{ env.MSI_COPIED_PATH }}"
             cd packs
             dir
