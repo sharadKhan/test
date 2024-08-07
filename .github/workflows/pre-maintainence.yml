@@ -40,6 +40,8 @@ jobs:
         run: |
           echo "The GitHub workspace directory is: ${{ steps.run-script.outputs.response }}"
           $response = ConvertTo-Json '${{ steps.run-script.outputs.response }}'
+         
           foreach ($item in $response) {
+             // download MSI to Runner if not exists
             Write-Output $item.msiPath
           }
