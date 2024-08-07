@@ -24,9 +24,9 @@ jobs:
   build:
     runs-on: [garm, dev, us-east4, vm, windows, medium]
     env: # No need if workflow_dispatch works
-      HALO_IP_ADDRESS = "10.210.222.182"
-      MSI_PATH = "\\dev.us.corp\de\Dev\DailyBuilds\60046\NET CD Structure\UltiProWeb\Web Server.msi"
-      BUILD_VERSION = "8.0.0"
+      HALO_IP_ADDRESS : "10.210.222.182"
+      MSI_PATH : "\\dev.us.corp\de\Dev\DailyBuilds\60046\NET CD Structure\UltiProWeb\Web Server.msi"
+      BUILD_VERSION : "8.0.0"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -87,7 +87,7 @@ jobs:
             } 
           } -ArgumentList $destinationPath
 
-          Copy-Item "${{ env.MSI_COPIED_PATH }}" -Destination " $destinationPath" -ToSession $Session
+          Copy-Item "${{ env.MSI_COPIED_PATH }}" -Destination "$destinationPath" -ToSession $Session
           Remove-PSSession -Session $Session
 
       - name: Create Chocolatey package
