@@ -1,0 +1,23 @@
+name: Create and upload chocolatey package to JFrog
+on:
+  workflow_dispatch:
+    inputs:
+      MSI_PATH:
+        description: 'MSI PATH'
+        required: true
+jobs:
+  build:
+    runs-on: [garm, dev, us-east4, vm, windows, medium]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        
+      - name: Install JFROG CLI
+        uses: jfrog/setup-jfrog-cli@v4
+        env:
+          JF_URL: ${{ vars.JFROG_ARTIFACTORY_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.JFROG_TOKEN }} 
+ 
+      - name: Upload package
+        run: |
+          jf rt u ${{ github.event.inputs.MSI_PATH }} "https://sonatapoc.jfrog.io/artifactory/api/generic/msiexecutables-generic-local"   
