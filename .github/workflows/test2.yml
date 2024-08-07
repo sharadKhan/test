@@ -11,8 +11,11 @@ jobs:
         run: |
           $name = "abhishek" 
           $env:NAME = "abhishek" 
-        
+        env:
+          NAME = "abhishek" 
+
       - name: Create package
         run: |
           echo "name is $name"
-          echo "env name is $env:NAME"
+          echo "env name is ${{ $env:NAME }}"
+           echo "main env name is ${{ $env:NAME }}"
