@@ -1,0 +1,18 @@
+name: Test
+on:
+  workflow_dispatch:
+  
+jobs:
+  build:
+    # runs-on: [garm, dev, us-east4, vm, windows, medium]
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        run: |
+          $name = "abhishek"
+          Write-Output "NAME=$name" >> $env:GITHUB_ENV
+
+      - name: Create package
+        run: |
+          echo "name is $name"
+          echo "main env name is ${{ env.NAME }}"
