@@ -1,0 +1,54 @@
+name: Test
+on:
+  push:
+    branches: [ Testing-branch]
+  workflow_dispatch:
+      inputs:
+        ENVIRONMENT_PREFIX:
+          description: 'Halo GCVE environment name'
+          type: string
+          required: true
+        BUILD_NUMBER:
+          description: "UKG PRO build number to be upgraded to"
+          type: string
+          required: true
+  
+jobs:
+  build:
+    # runs-on: [garm, dev, us-east4, vm, windows, medium]
+    runs-on: [garm, dev, us-east4, vm, windows, medium]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        
+      - name: Create package 
+        run: |
+          $networkUser = "CORPORATE_NT\abhishek.m"
+          $networkPass = "Abhishek@ukg!@#"
+          $secureNetworkPass = ConvertTo-SecureString $networkPass -AsPlainText -Force
+          $networkCredential = New-Object System.Management.Automation.PSCredential ($networkUser, $secureNetworkPass)
+
+          # Map network drive
+          New-PSDrive -Name Z -PSProvider FileSystem -Root "\\dev.us.corp\de\Dev\DailyBuilds\60046\NET CD Structure\Server" -Credential $networkCredential -Persist
+
+          # Copy the file to the local directory
+          Copy-Item "Z:\Super Site Server.msi" -Destination "C:\runner\_work\ukgpro-release-automation\ukgpro-release-automation"
+          # Verify the file exists at the destination
+          $destinationPath = "C:\runner\_work\ukgpro-release-automation\ukgpro-release-automation\Super Site Server.msi"
+          if (Test-Path -Path $destinationPath) {
+              Write-Host "File copied successfully to $destinationPath"
+          } else {
+              Write-Host "File copy failed. The file does not exist at $destinationPath"
+          }
+          
+          # Clean up mapped drive
+          Remove-PSDrive -Name Z
+          Set-Item WSMan:\localhost\Client\TrustedHosts -Value "10.210.222.182" -Force
+          ipconfig
+          ping 10.210.222.182
+          $securePassword = ConvertTo-SecureString '!@bZjbQQ!9tz' -AsPlainText -Force
+          $credential = New-Object System.Management.Automation.PSCredential ('CORPORATE_NT\administrator', $securePassword)
+          $Session = New-PSSession -ComputerName "10.210.222.182" -Credential $credential
+          Copy-Item "C:\runner\_work\ukgpro-release-automation\ukgpro-release-automation\Super Site Server.msi" -Destination "D:\Shared\Packs" -ToSession $Session
+          Remove-PSSession -Session $Session
+          
