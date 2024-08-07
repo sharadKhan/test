@@ -12,7 +12,7 @@ jobs:
           $name = "abhishek" 
           $env:NAME = "abhishek" 
         env:
-          NAME = "abhishek" 
+          NAME : $name
 
       - name: Create package
         run: |
