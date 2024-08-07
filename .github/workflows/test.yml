@@ -7,25 +7,25 @@ on:
 jobs:
   build:
     # runs-on: [garm, dev, us-east4, vm, windows, medium]
-    runs-on: [garm, dev, us-east4, vm, windows, medium]
+    runs-on: windows-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
         
       - name: Create package
         run: |
-          $remoteIP = "172.29.74.154"       
-          $remoteUser = "m.abhishek@sonata-software.com"  
-          $remotePassword = "Gv@123456"
+          # $remoteIP = "172.29.74.154"       
+          # $remoteUser = "m.abhishek@sonata-software.com"  
+          # $remotePassword = "Gv@123456"
 
-          # Create a PSCredential object for remote login
-          $securePassword = ConvertTo-SecureString $remotePassword -AsPlainText -Force
-          $credential = New-Object System.Management.Automation.PSCredential ($remoteUser, $securePassword)
+          # # Create a PSCredential object for remote login
+          # $securePassword = ConvertTo-SecureString $remotePassword -AsPlainText -Force
+          # $credential = New-Object System.Management.Automation.PSCredential ($remoteUser, $securePassword)
 
           Set-Item WSMan:\localhost\Client\TrustedHosts -Value "10.210.222.182" -Force
 
-          # Script block to run on the remote machine
-          $scriptBlock = {
-              Set-Item WSMan:\localhost\Client\TrustedHosts -Value "10.210.222.182" -Force
-          }
-          Invoke-Command -ComputerName $remoteIP -Credential $credential -ScriptBlock $scriptBlock 
+          # # Script block to run on the remote machine
+          # $scriptBlock = {
+          #     Set-Item WSMan:\localhost\Client\TrustedHosts -Value "10.210.222.182" -Force
+          # }
+          # Invoke-Command -ComputerName $remoteIP -Credential $credential -ScriptBlock $scriptBlock 
