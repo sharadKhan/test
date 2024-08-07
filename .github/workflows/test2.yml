@@ -10,7 +10,9 @@ jobs:
       - name: Checkout repository
         run: |
           $name = "abhishek" 
+          $env:name = "abhishek" 
         
       - name: Create package
         run: |
           echo "name is $name"
+          echo "env name is $env:name"
