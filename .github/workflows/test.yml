@@ -3,10 +3,10 @@ on:
   push:
     branches: [ Testing-branch]
   workflow_dispatch:
-
   
 jobs:
   build:
+    # runs-on: [garm, dev, us-east4, vm, windows, medium]
     runs-on: [garm, dev, us-east4, vm, windows, medium]
     steps:
       - name: Checkout repository
@@ -14,5 +14,18 @@ jobs:
         
       - name: Create package
         run: |
+          $remoteIP = "172.29.74.154"       
+          $remoteUser = "m.abhishek@sonata-software.com"  
+          $remotePassword = "Gv@123456"
+
+          # Create a PSCredential object for remote login
+          $securePassword = ConvertTo-SecureString $remotePassword -AsPlainText -Force
+          $credential = New-Object System.Management.Automation.PSCredential ($remoteUser, $securePassword)
+
           Set-Item WSMan:\localhost\Client\TrustedHosts -Value "10.210.222.182" -Force
 
+          # Script block to run on the remote machine
+          $scriptBlock = {
+              Set-Item WSMan:\localhost\Client\TrustedHosts -Value "10.210.222.182" -Force
+          }
+          Invoke-Command -ComputerName $remoteIP -Credential $credential -ScriptBlock $scriptBlock 
