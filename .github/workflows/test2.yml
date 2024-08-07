@@ -15,4 +15,4 @@ jobs:
       - name: Create package
         run: |
           echo "name is $name"
-          echo "main env name is ${{ $env:NAME }}"
+          echo "main env name is ${{ env:NAME }}"
