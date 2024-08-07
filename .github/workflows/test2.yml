@@ -10,7 +10,7 @@ jobs:
       - name: Checkout repository
         run: |
           $name = "abhishek"
-          Write-Output "NAME=$name" >> $env.GITHUB_ENV
+          Write-Output "NAME=$name" >> $env:GITHUB_ENV
 
       - name: Create package
         run: |
