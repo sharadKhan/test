@@ -46,5 +46,5 @@ jobs:
       
       - name : Upload msi
         run : |
-         jf rt u ${{ github.event.inputs.MSI_PATH }} ${{ vars.JFROG_REPOSITORY }} 
+         jf rt u ${{ github.event.inputs.MSI_PATH }} ${{ vars.JFROG_MSI_REPOSITORY }} 
           
