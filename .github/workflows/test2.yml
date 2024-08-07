@@ -1,0 +1,16 @@
+name: Test
+on:
+  workflow_dispatch:
+  
+jobs:
+  build:
+    # runs-on: [garm, dev, us-east4, vm, windows, medium]
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        run: |
+          $name = "abhishek" 
+        
+      - name: Create package
+        run: |
+          echo "name is $name"
