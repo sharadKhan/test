@@ -5,6 +5,7 @@ on:
       MSI_NAME:
         description: 'MSI Name'
         required: true
+        default: 'MSI'
       VERSION:
         description: 'Version'
         required: true
