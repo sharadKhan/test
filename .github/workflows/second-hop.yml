@@ -1,0 +1,18 @@
+name: Download File from Network Share
+
+on:
+  push:
+    branches:
+      - main  # Trigger on push to the main branch
+
+jobs:
+  download_file:
+    runs-on: self-hosted  # Use the self-hosted runner
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v3
+
+    - name: Run PowerShell script to download file
+      run: |
+        powershell.exe -ExecutionPolicy Bypass -File "${{ github.workspace }}\archives\download-file.ps1"

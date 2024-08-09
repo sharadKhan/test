@@ -56,10 +56,14 @@ $xml.Save($nuspecPath)
 # Edit chocolateyinstall.ps1 file.
 $installScriptContent = @"
 `$packageParameters = Get-PackageParameters
-`$fileLocation = `$packageParameters['filelocation']
-`$defaultArgs = "/quiet /norestart /l*v ``"`$(`$env:TEMP)\`$(`$env:chocolateyPackageName).`$(`$env:chocolateyPackageVersion).MsiInstall.log``""
+`$fileLocation = `$packageParameters['filelocation'] -replace '%space%', ' '
+`$logPath = `$packageParameters['logpath'] -replace '%space%', ' '
+`$defaultArgs = '/quiet /norestart'
 `$arguments = `$packageParameters['arguments'] -replace '%space%', ' '
-`$finalArgs = "`$defaultArgs `$arguments"
+`$finalArgs = "`$defaultArgs `$arguments /l*vx ``"`$logPath``"" 
+
+Write-Output "filelocation =  `$fileLocation"
+Write-Output "Arguments = `$finalArgs"
 
 `$packageArgs = @{
     packageName    = `$env:ChocolateyPackageName
@@ -76,6 +80,7 @@ $installScriptContent = @"
 Install-ChocolateyInstallPackage @packageArgs 
 
 "@
+
 Set-Content -Path $installScriptPath -Value $installScriptContent
 
 # Create .nupkg file.
