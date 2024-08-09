@@ -1,14 +1,13 @@
 param (
     [string]$version,
-    [string]$buildPath,
-    [string]$checksum
+    [string]$msiPath,
+    [PSCredential]$credential
 )
 
 # Dot-source the helper script
 . .\scripts\helper.ps1
 
 $workingDirectory = Get-Location
-
 
 # Assign path for choco packages.
 $packagePath = './packs'
@@ -20,7 +19,7 @@ if (-Not (Test-Path -Path $packagePath)) {
 }
 
 # Extract filename and Remove space as there should not be any spaces for .nuspec file.
-$msiName = [System.IO.Path]::GetFileNameWithoutExtension($buildPath) -replace ' ', ''
+$msiName = [System.IO.Path]::GetFileNameWithoutExtension($msiPath) -replace ' ', ''
 
 # Set paths.
 $packageDir = Join-Path -Path $packagePath -ChildPath $msiName
@@ -52,6 +51,8 @@ if ($authorsNode) {
     $xml.package.metadata.RemoveChild($authorsNode)
 }
 $xml.Save($nuspecPath)
+
+$checksum = Get-FileChecksum($msiPath, $credential)
 
 # Edit chocolateyinstall.ps1 file.
 $installScriptContent = Get-Content -Path $templatePath -Raw

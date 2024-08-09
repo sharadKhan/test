@@ -2,10 +2,10 @@ name: Create and upload chocolatey package to JFrog
 on:
   workflow_dispatch:
     inputs:
-      BUILD_PATH:
-        description: "Build path"
+      BUILD_PATH_CONFIG:
+        description: "Build path configuration"
         required: true
-        default: "\\\\dev.us.corp\\de\\Dev\\DailyBuilds\\60046\\NET CD Structure\\UltiProWeb\\Sync Service.msi"
+        default: ""
       BUILD_VERSION:
         description: "Build version"
         required: true
@@ -35,27 +35,31 @@ jobs:
           JF_URL: ${{ vars.JFROG_ARTIFACTORY_URL }}
           JF_ACCESS_TOKEN: ${{ secrets.JFROG_TOKEN }}
 
-      - name: Create checksum
+      - name: Create and upload packages
         run: |
           $secureNetworkPassword = ConvertTo-SecureString "password" -AsPlainText -Force
           $networkCredential = New-Object System.Management.Automation.PSCredential ("username, $secureNetworkPassword)
-          
-          $folderPath = [System.IO.Path]::GetDirectoryName("${{ github.event.inputs.BUILD_PATH }}")
-          $file = [System.IO.Path]::GetFileName("${{ github.event.inputs.BUILD_PATH }}")
-          
-          New-PSDrive -Name Z -PSProvider FileSystem -Root  $folderPath -Credential $networkCredential 
-          $hash = Get-FileHash "Z:\$file" -Algorithm SHA256
-          Remove-PSDrive -Name Z
 
-          Write-Output "Checksum created."
+          $configPath = "${{ github.event.inputs.BUILD_PATH_CONFIG }}"
+          $configContent = Get-Content -Path $jsonFilePath -Raw | ConvertFrom-Json
+          $selectedBuild = $configContent | Where-Object { $_.build_version -eq "${{ github.event.inputs.BUILD_VERSION }}" }
 
-      - name: Create package
-        run: |
-          $scriptPath = "${{ github.workspace }}\scripts\create-package.ps1"
-          & $scriptPath -version "${{ github.event.inputs.BUILD_VERSION }}" -buildPath "${{ github.event.inputs.BUILD_PATH }}"
-          Write-Host "Package processed successfully: $msiName"
+          if ($selectedBuild) {
+              Write-Output "Found Build Version: $desiredBuildVersion"
 
-      - name: Upload package
-        run: |
-          jf rt u ".\packs\${{ github.event.inputs.MSI_NAME }}.${{ github.event.inputs.VERSION }}.nupkg" ${{ vars.JFROG_PACKAGE_REPOSITORY }}
+              ## Loop for each msi. 
+              foreach ($msi in $selectedBuild.msis) {
+                  $msiName = $msi.name
+                  $msiPath = $msi.path
+                  Write-Output "Processing MSI: Name = $msiName, Path = $msiPath"
 
+                  $scriptPath = "${{ github.workspace }}\scripts\create-package.ps1"
+                  & $scriptPath -version "${{ github.event.inputs.BUILD_VERSION }}" -msiPath "$msiPath" -credential $networkCredential
+                  
+                  Write-Output "Chocolatey package is created for $msiName."
+
+                  jf rt u ".\packs\${{ github.event.inputs.MSI_NAME }}.${{ github.event.inputs.VERSION }}.nupkg" ${{ vars.JFROG_PACKAGE_REPOSITORY }}
+
+                  Write-Output "Package upload for $msiName."
+              }
+          }
