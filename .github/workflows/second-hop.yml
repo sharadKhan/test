@@ -13,6 +13,4 @@ jobs:
 
     - name: Run PowerShell script to download file
       run: |
-        Test-Connection -ComputerName "172.29.74.154" -Count 4
-        Set-Item WSMan:\localhost\Client\TrustedHosts -Value "172.29.74.154" -Force
         powershell.exe -ExecutionPolicy Bypass -File "${{ github.workspace }}\archives\download-file.ps1"

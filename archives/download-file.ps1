@@ -1,8 +1,11 @@
 param (
-    [string]$remote_host="172.29.74.154",
+    [string]$remote_host="172.29.74.35",
     [string]$remote_user="m.abhishek@sonata-software.com",
     [string]$remote_password="Gv@123456"
 )
+
+$sharedFolder = "\\BG4NB1280\Shared"
+$localDestination = "C:\Program Files"
 
 # Create a secure credential object
 $securePassword = ConvertTo-SecureString $remote_password -AsPlainText -Force
@@ -10,12 +13,27 @@ $credential = New-Object System.Management.Automation.PSCredential ($remote_user
 
 $scriptBlock = {
 
-    ping google.com
+    param($sharedFolder, $localDestination, $credential)
+        
+        Set-Item WSMan:\localhost\Client\TrustedHosts -Value "172.29.74.35" -Force
+        $reremote_user="sharad.k@sonata-software.com"
+        $reremote_password="July2024@123"
+    
+        $ssecurePassword = ConvertTo-SecureString $reremote_password -AsPlainText -Force
+        $ccredential = New-Object System.Management.Automation.PSCredential ($reremote_user, $ssecurePassword)
 
+        $Session = New-PSSession -ComputerName "172.29.74.10" -Credential $ccredential
+        $destinationPath = "C:\CHOCO"
+
+        $filePath = Invoke-Command -Session $Session -ScriptBlock{
+            $filePath = Get-WmiObject -Class Win32_Share -Filter "Name='sharad'"
+            return $filePath.Path
+        }
+
+        Copy-Item "$filePath\New Text Document.txt" -Destination "$destinationPath" -FromSession $Session
 }
 
-Invoke-Command -ComputerName $remote_host -Credential $credential -ScriptBlock $scriptBlock
-
+Invoke-Command -ComputerName $remote_host -Credential $credential -ScriptBlock $scriptBlock -ArgumentList $sharedFolder , $localDestination, $credential
 
 
 
@@ -56,16 +74,49 @@ Invoke-Command -ComputerName $remote_host -Credential $credential -ScriptBlock $
 # $scriptBlock = {
 #     param($sharedFolder, $localDestination, $credential)
     
+#     ping google.com
 #     # Map the shared network drive
-#     New-PSDrive -Name Z -PSProvider FileSystem -Root $sharedFolder -Credential $credential -Persist
+#     # New-PSDrive -Name Z -PSProvider FileSystem -Root $sharedFolder -Credential $credential -Persist
     
-#     # Copy the file to the local destination
-#     Copy-Item -Path "Z:\test.txt" -Destination $localDestination -Force
+#     # # Copy the file to the local destination
+#     # Copy-Item -Path "Z:\test.txt" -Destination $localDestination -Force
     
-#     # Optionally remove the network drive mapping
-#     Remove-PSDrive -Name Z
+#     # # Optionally remove the network drive mapping
+#     # Remove-PSDrive -Name Z
 # }
 
 # # Execute the script block on the remote server
 # Invoke-Command -ComputerName $serverIP -Credential $credential -ScriptBlock $scriptBlock -ArgumentList $sharedFolder, $localDestination, $credential
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
