@@ -1,5 +1,5 @@
 param (
-    [string]$remote_host="172.29.74.27",
+    [string]$remote_host="172.29.74.154",
     [string]$remote_user="m.abhishek@sonata-software.com",
     [string]$remote_password="Gv@123456"
 )
