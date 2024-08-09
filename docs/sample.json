@@ -17,7 +17,8 @@
                                 "arguments": {
                                     "US_LOCAL_SERVER": "sonatashrdss",
                                     "US_LOCAL_AUTHENTICATION": "1"
-                                }
+                                },
+                                "predecessor": []
                             }
                         ]
                     },

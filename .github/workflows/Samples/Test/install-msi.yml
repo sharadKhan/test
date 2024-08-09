@@ -1,0 +1,70 @@
+name: Copy MSI to Halo server and Create package
+on:
+  push:
+    branches: [ Testing-branch]
+  workflow_dispatch:
+      inputs:
+        HALO_IP_ADDRESS:
+          description: 'Halo IP address'
+          type: string
+          required: true
+          default: "10.210.222.182"
+         MSI_PATH:
+          description: "MSI Path"
+          type: string
+          required: true
+          default: "\\\\dev.us.corp\\de\\Dev\\DailyBuilds\\60046\\NET CD Structure\\UltiProWeb\\Web Server.msi"
+         BUILD_VERSION:
+          description: "Build version"
+          type: string
+          required: true
+          default: "8.0.0"
+  
+jobs:
+  build:
+    runs-on: [garm, dev, us-east4, vm, windows, medium]
+    env: # No need if workflow_dispatch works
+      HALO_IP_ADDRESS : "10.210.222.182"
+      MSI_PATH : "\\dev.us.corp\de\Dev\DailyBuilds\60046\NET CD Structure\UltiProWeb\Web Server.msi"
+      BUILD_VERSION : "8.0.0"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Choco package
+        run: |
+
+ 
+      - name: Copy MSI from Runner to Halo
+        run: |
+         
+          Set-Item WSMan:\localhost\Client\TrustedHosts -Value "${{ env.HALO_IP_ADDRESS }}" -Force
+
+          $securePassword = ConvertTo-SecureString '!@bZjbQQ!9tz' -AsPlainText -Force
+          $credential = New-Object System.Management.Automation.PSCredential ('CORPORATE_NT\administrator', $securePassword)
+          
+          $Session = New-PSSession -ComputerName "${{ env.HALO_IP_ADDRESS }}" -Credential $credential
+          $destinationPath = "D:\Artifacts\MSIS"
+          Invoke-Command -Session $Session -ScriptBlock {     
+
+          if (-not (Get-Command choco -ErrorAction SilentlyContinue)) {
+            Write-Output "Chocolatey is not installed. Installing Chocolatey..."
+                Set-ExecutionPolicy Bypass -Scope Process -Force; 
+                [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; 
+                iwr https://community.chocolatey.org/install.ps1 -UseBasicParsing | iex
+            } else {
+            Write-Output "Chocolatey is already installed."
+           }
+
+            param ($destinationPath)    
+            if (-not (Test-Path -Path $destinationPath)) {        
+               New-Item -Path $destinationPath -ItemType Directory     
+            } 
+          
+          
+          } -ArgumentList $destinationPath
+
+
+          Remove-PSSession -Session $Session
+
+ 

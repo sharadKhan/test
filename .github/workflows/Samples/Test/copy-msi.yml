@@ -120,6 +120,6 @@ jobs:
                   cd $destinationPath
                   choco install $msiFile --version $version --package-parameters=`"`'$packageParameters`'`" --source . -y --force
                  
-              } -ArgumentList $destinationPath, ${{ env.MSI_FILE}}, ${{ env.BUILD_VERSION }}
+              } -ArgumentList $destinationPath, "${{ env.MSI_FILE}}", "${{ env.BUILD_VERSION }}"
 
               Remove-PSSession -Session $Session

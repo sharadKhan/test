@@ -1,0 +1,15 @@
+[
+  {
+    "build_version": "6.0.0",
+    "msis": [
+      {
+        "name": "MSIDemo",
+        "path": "\\\\BG4PHS29EPCOVM1\\shared\\MSIDemo.msi"
+      },
+      {
+        "name": "MSIDemo2",
+        "path": "\\\\BG4PHS29EPCOVM1\\shared\\MSIDemo2.msi"
+      }
+    ]
+  }
+]
