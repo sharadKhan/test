@@ -1,7 +1,7 @@
 # Server IP and credentials
 $serverIP = "172.29.74.154"
-$username = "m.abhishek@sonata-software.com"
-$password = "GV@123456" # Use environment variables or GitHub Secrets
+$username = "SONATA\m.abhishek"
+$password = "GV@123456"
 
 # Shared folder path and local destination on the server
 $sharedFolder = "\\BG4NB1280\Shared"
