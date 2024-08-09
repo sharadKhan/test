@@ -14,6 +14,8 @@ $credential = New-Object System.Management.Automation.PSCredential ($remote_user
 $scriptBlock = {
 
     param($sharedFolder, $localDestination, $credential)
+        
+        Set-Item WSMan:\localhost\Client\TrustedHosts -Value "172.29.74.35" -Force
         $reremote_user="sharad.k@sonata-software.com"
         $reremote_password="July2024@123"
     
