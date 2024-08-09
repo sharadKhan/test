@@ -1,9 +1,7 @@
 name: Download File from Network Share
 
 on:
-  push:
-    branches:
-      - main  # Trigger on push to the main branch
+ workflow_dispatch:
 
 jobs:
   download_file:
@@ -15,5 +13,5 @@ jobs:
 
     - name: Run PowerShell script to download file
       run: |
-        Set-Item WSMan:\localhost\Client\TrustedHosts -Value "172.29.74.154"
+        Set-Item WSMan:\localhost\Client\TrustedHosts -Value "172.29.74.154" -Force
         powershell.exe -ExecutionPolicy Bypass -File "${{ github.workspace }}\archives\download-file.ps1"
